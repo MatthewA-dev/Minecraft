@@ -11,25 +11,13 @@ import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.utils.ScreenUtils;
+import com.matthewadev.game.Game;
 import com.matthewadev.render.BlockRenderer;
 
 public class Main extends ApplicationAdapter {
-	ModelBatch batch;
-	PerspectiveCamera camera;
-	BlockRenderer renderer;
 	@Override
 	public void create () {
-		batch = new ModelBatch();
-		camera = new PerspectiveCamera(90, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		camera.position.set(1f, 1f, 1f);
-		camera.lookAt(0,0,0);
-		camera.near = 1f;
-		camera.far = 300f;
-		camera.update();
-
-		renderer = new BlockRenderer();
-		renderer.addBlock(0,0,0);
-		renderer.addBlock(0,0,1);
+		Game.init();
 	}
 
 	@Override
@@ -39,14 +27,11 @@ public class Main extends ApplicationAdapter {
 		// opengl things
 		Gdx.gl.glViewport(0,0,Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
-
-		// rendering
-		renderer.renderBlocks(camera, batch);
+		Game.runFrame();
 	}
 	
 	@Override
 	public void dispose () {
-		batch.dispose();
-		renderer.dispose();
+		Game.dispose();
 	}
 }
