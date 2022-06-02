@@ -67,13 +67,22 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) {
-        int diffX = Gdx.graphics.getWidth() / 2 - screenX;
-        int diffY = Gdx.graphics.getHeight() / 2 - screenY;
+        float angleX = Gdx.graphics.getWidth() / 2 - screenX * 0.3f;
+        float angleY = Gdx.graphics.getHeight() / 2 - screenY * 0.3f;
+        Game.camera.
+        //System.out.println(Game.camera.direction);
+/*        double x = Game.camera.direction.x;
+        double y = Math.cos(angleY) * Game.camera.direction.y + Math.sin(angleX) * Game.camera.direction.y;
+        double z = - Math.sin(angleX) * Game.camera.direction.z + Math.cos(angleX) * Game.camera.direction.z;
+        Game.camera.direction.x = (float) x;
+        Game.camera.direction.y = (float) y;
+        Game.camera.direction.z = (float) z;*/
+        //Game.camera.direction = new Vector3();
         //Game.camera.rotate(0.3f * diffX, 0f, 1f, 0f); // Left to right movement
         //Game.camera.rotate(0.3f * diffX, 0f, 1f, 0f);
         //Game.camera.rotate(0.3f * diffY, 1f, 0f, 0f);
-        //Game.camera.update();
-        //Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2,Gdx.graphics.getHeight() / 2);
+        Game.camera.update();
+        Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2,Gdx.graphics.getHeight() / 2);
         return false;
     }
 
