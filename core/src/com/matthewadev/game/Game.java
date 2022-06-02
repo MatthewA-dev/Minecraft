@@ -18,8 +18,7 @@ public class Game {
         batch = new ModelBatch();
         camera = new PerspectiveCamera(90, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.set(1f, 1f, 1f);
-        camera.lookAt(0,0,0);
-        camera.near = 1f;
+        camera.near = 0f;
         camera.far = 300f;
         camera.update();
 
