@@ -9,15 +9,14 @@ import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
 import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.matthewadev.input.InputHandler;
-import com.matthewadev.render.BlockRenderer;
-import com.matthewadev.render.BlockType;
-import com.matthewadev.render.TextureManager;
+import com.matthewadev.render.*;
 
 public class Game {
     public static Player player;
     public static PerspectiveCamera camera;
     public static ModelBatch batch;
     public static BlockRenderer renderer;
+    public static ChunkManager crenderer;
     public static InputHandler inputHandler;
     public static Environment env;
 
@@ -32,8 +31,10 @@ public class Game {
         TextureManager.loadTextures();
         batch = new ModelBatch();
 
-        renderer = new BlockRenderer();
-        renderer.addBlock(0,0,0, BlockType.STONE);
+        crenderer = new ChunkManager();
+        crenderer.addBlock(new Block(0,0,0,BlockType.STONE));
+        //renderer = new BlockRenderer();
+        //renderer.addBlock(0,0,0, BlockType.STONE);
         //renderer.addBlock(0,0,1, BlockType.GRASS_BLOCK);
 
         inputHandler = new InputHandler();

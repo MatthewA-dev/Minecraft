@@ -18,12 +18,7 @@ public class InputHandler implements InputProcessor {
     public void handleInput(){
         // forward and backward movement
         if(Gdx.input.isKeyPressed(Input.Keys.W)){
-/*            Game.player.getPos().cpy().add(Game.camera.direction.cpy().scl(0.1f));
-            Vector3 pos = Game.player.getPos();
-            Vector3 looking = Game.camera.direction;
-            System.out.println(pos);
-            Game.player.setPos(pos.x + looking.x * 0.1f, pos.y + looking.y * 0.1f, pos.z + looking.z * 0.1f);
-  */        Game.player.setPos(Game.player.getPos().cpy().add(Game.camera.direction.cpy().scl(0.1f)));
+            Game.player.setPos(Game.player.getPos().cpy().add(Game.camera.direction.cpy().scl(0.1f)));
         }
         if(Gdx.input.isKeyPressed(Input.Keys.S)){
             Game.player.setPos(Game.player.getPos().cpy().sub(Game.camera.direction.cpy().scl(0.1f)));

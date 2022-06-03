@@ -26,6 +26,9 @@ public class Block {
     private BlockType type;
     private ArrayList<Model> models = new ArrayList<>(); // faces of cube
     private ArrayList<ModelInstance> instances = new ArrayList<>();
+    public final Material topMat = null;
+    public final Material sideMat = null;
+    public final Material botMat = null;
     // private type type;
 
     public Block(int x, int y, int z, BlockType blockType){
