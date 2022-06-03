@@ -12,31 +12,38 @@ import com.matthewadev.game.Game;
 
 // Continuous input handler (e.g. moving the player)
 public class InputHandler implements InputProcessor {
+    private Vector3 tmp = new Vector3(); // used for camera rotation
+    public float degreesPerPixel = 0.3f;
     // for continuous input
     public void handleInput(){
-        //System.out.println(Game.camera.direction);
-        //System.out.println(Game.camera.up);
-        //System.out.println("Degrees up: " + (-(float)Math.atan2(Game.camera.up.x, Game.camera.up.y)*MathUtils.radiansToDegrees + 180));
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            //Game.camera.direction.x += 0.01;
-            //Game.camera.rotate(new Matrix4());
-            //Game.camera.rotate(1f, 0f, 1f, 0f);
+        // forward and backward movement
+        if(Gdx.input.isKeyPressed(Input.Keys.W)){
+/*            Game.player.getPos().cpy().add(Game.camera.direction.cpy().scl(0.1f));
+            Vector3 pos = Game.player.getPos();
+            Vector3 looking = Game.camera.direction;
+            System.out.println(pos);
+            Game.player.setPos(pos.x + looking.x * 0.1f, pos.y + looking.y * 0.1f, pos.z + looking.z * 0.1f);
+  */        Game.player.setPos(Game.player.getPos().cpy().add(Game.camera.direction.cpy().scl(0.1f)));
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-            //Game.camera.rotate(-1f, 0f, 1f, 0f);
+        if(Gdx.input.isKeyPressed(Input.Keys.S)){
+            Game.player.setPos(Game.player.getPos().cpy().sub(Game.camera.direction.cpy().scl(0.1f)));
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            //Game.camera.rotate(1f, 1f, 0f, 0f);
+        if(Gdx.input.isKeyPressed(Input.Keys.A)){
+            Game.player.setPos(Game.player.getPos().cpy().add(Game.camera.up.cpy().crs(Game.camera.direction).scl(0.1f)));
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-            //Game.camera.rotate(-1f, 1f, 0f, 0f);
-
+        if(Gdx.input.isKeyPressed(Input.Keys.D)){
+            Game.player.setPos(Game.player.getPos().cpy().sub(Game.camera.up.cpy().crs(Game.camera.direction).scl(0.1f)));
         }
         Game.camera.update();
     }
 
     @Override
     public boolean keyDown(int keycode) {
+        switch(keycode){
+            case Input.Keys.R:
+                Game.player.setPos(1f,1f,1f);
+                break;
+        }
         return false;
     }
 
@@ -66,24 +73,15 @@ public class InputHandler implements InputProcessor {
     }
 
     @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        float angleX = Gdx.graphics.getWidth() / 2 - screenX * 0.3f;
-        float angleY = Gdx.graphics.getHeight() / 2 - screenY * 0.3f;
-        Game.camera.
-        //System.out.println(Game.camera.direction);
-/*        double x = Game.camera.direction.x;
-        double y = Math.cos(angleY) * Game.camera.direction.y + Math.sin(angleX) * Game.camera.direction.y;
-        double z = - Math.sin(angleX) * Game.camera.direction.z + Math.cos(angleX) * Game.camera.direction.z;
-        Game.camera.direction.x = (float) x;
-        Game.camera.direction.y = (float) y;
-        Game.camera.direction.z = (float) z;*/
-        //Game.camera.direction = new Vector3();
-        //Game.camera.rotate(0.3f * diffX, 0f, 1f, 0f); // Left to right movement
-        //Game.camera.rotate(0.3f * diffX, 0f, 1f, 0f);
-        //Game.camera.rotate(0.3f * diffY, 1f, 0f, 0f);
+    public boolean mouseMoved(int screenX, int screenY) { // Adapted from the libgdx FirstPersonCamera controller code
+        float angleX = (Gdx.graphics.getWidth() / 2 - screenX) * degreesPerPixel;
+        float angleY = (Gdx.graphics.getHeight() / 2 - screenY)  * degreesPerPixel;
+        Game.camera.direction.rotate(Game.camera.up, angleX);
+        tmp.set(Game.camera.direction).crs(Game.camera.up).nor();
+        Game.camera.direction.rotate(tmp, angleY);
         Game.camera.update();
         Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2,Gdx.graphics.getHeight() / 2);
-        return false;
+        return true;
     }
 
     @Override
