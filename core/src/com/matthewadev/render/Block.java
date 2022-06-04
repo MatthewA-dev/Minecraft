@@ -26,9 +26,9 @@ public class Block {
     private BlockType type;
     private ArrayList<Model> models = new ArrayList<>(); // faces of cube
     private ArrayList<ModelInstance> instances = new ArrayList<>();
-    public final Material topMat = null;
-    public final Material sideMat = null;
-    public final Material botMat = null;
+    public Material topMat = null;
+    public Material sideMat = null;
+    public Material botMat = null;
     // private type type;
 
     public Block(int x, int y, int z, BlockType blockType){
@@ -41,9 +41,7 @@ public class Block {
 
         ModelBuilder modelBuilder = new ModelBuilder();
 
-        Material topMat = new Material(TextureAttribute.createDiffuse(textures.get(BlockSide.TOP))); // We will always have a top texture
-        Material sideMat;
-        Material botMat;
+        topMat = new Material(TextureAttribute.createDiffuse(textures.get(BlockSide.TOP))); // We will always have a top texture
         if(textures.get(BlockSide.SIDE) != null){
             sideMat = new Material(TextureAttribute.createDiffuse(textures.get(BlockSide.SIDE)));
         }else{

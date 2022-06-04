@@ -1,13 +1,19 @@
 package com.matthewadev.render;
 
+import com.badlogic.gdx.graphics.g3d.Environment;
+import com.badlogic.gdx.graphics.g3d.ModelBatch;
+import com.matthewadev.game.Game;
+
 import java.util.ArrayList;
 
 public class ChunkManager {
     private ArrayList<Chunk> chunks = new ArrayList<>();
-    public void render(){
+    public void render(ModelBatch batch, Environment env){
+        batch.begin(Game.camera);
         for (Chunk c: chunks){
-            c.render();
+            c.render(batch,env);
         }
+        batch.end();
     }
 
     public void addBlock(Block block){
@@ -19,6 +25,10 @@ public class ChunkManager {
                 return;
             }
         }
+        // otherwise new chunk
+        Chunk c = new Chunk(chunkx,chunkz);
+        c.addBlock(block, block.getX(), block.getY(), block.getZ());
+        chunks.add(c);
     }
 
     public Block getBlock(int x, int y, int z){

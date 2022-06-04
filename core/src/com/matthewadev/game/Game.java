@@ -33,6 +33,7 @@ public class Game {
 
         crenderer = new ChunkManager();
         crenderer.addBlock(new Block(0,0,0,BlockType.STONE));
+        crenderer.addBlock(new Block(0,2,0,BlockType.STONE));
         //renderer = new BlockRenderer();
         //renderer.addBlock(0,0,0, BlockType.STONE);
         //renderer.addBlock(0,0,1, BlockType.GRASS_BLOCK);
@@ -52,7 +53,8 @@ public class Game {
         inputHandler.handleInput();
     }
     public static void render(){
-        renderer.renderBlocks(batch, env);
+        //renderer.renderBlocks(batch, env);
+        crenderer.render(batch,env);
     }
     public static void dispose(){
         renderer.dispose();
