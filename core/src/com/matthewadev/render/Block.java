@@ -39,7 +39,6 @@ public class Block {
 
         HashMap<BlockSide, Texture> textures = TextureManager.textures.get(type);
 
-        ModelBuilder modelBuilder = new ModelBuilder();
 
         topMat = new Material(TextureAttribute.createDiffuse(textures.get(BlockSide.TOP))); // We will always have a top texture
         if(textures.get(BlockSide.SIDE) != null){
@@ -52,8 +51,10 @@ public class Block {
         }else{
             botMat = new Material(TextureAttribute.createDiffuse(textures.get(BlockSide.TOP)));
         }
+        //ModelBuilder modelBuilder = new ModelBuilder();
         // create the six instances
         // keeping the models so that they can be properly destroyed
+/*
         models.add(modelBuilder.createBox(1f, 1f, 0.001f,
                 topMat,
                 VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates));
@@ -69,7 +70,8 @@ public class Block {
         instances.add(new ModelInstance(models.get(1)));
         instances.add(new ModelInstance(models.get(1)));
         instances.add(new ModelInstance(models.get(2))); // bottom
-
+*/
+/*
         // setting the faces to be oriented correct
         instances.get(0).transform.setTranslation(x,y + 0.5f,z + 0.5f);
         instances.get(0).transform.rotate(1f,0f,0f, 90f);
@@ -87,7 +89,7 @@ public class Block {
         //instances.get(4).transform.rotate(0f,1f,0f, 90f);
 
         instances.get(5).transform.setTranslation(x,y - 0.5f,z + 0.5f);
-        instances.get(5).transform.rotate(1f,0f,0f, 90f);
+        instances.get(5).transform.rotate(1f,0f,0f, 90f);*/
     }
 
     public int getX() {
@@ -105,10 +107,20 @@ public class Block {
 /*    public void render(PerspectiveCamera camera, ModelBatch batch, Environment env){
         batch.render(instance, env);
     }*/
+    public BlockType getType(){
+        return type;
+    }
     public void render(ModelBatch batch, Environment env){
         for(ModelInstance i: instances) {
             batch.render(i, env);
         }
+    }
+    public Vector3 toChunkCoords(){
+        return new Vector3(getX() % 16,getY(),getZ() % 16);
+    }
+    public long toChunkNum(){
+        Vector3 loc = toChunkCoords();
+        return ((long) (loc.x) << 32L) | ( (long) loc.y << 16) | (long)loc.z;
     }
     // closing
     public void dispose(){

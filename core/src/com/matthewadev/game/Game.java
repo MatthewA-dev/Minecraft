@@ -19,6 +19,7 @@ public class Game {
     public static ChunkManager crenderer;
     public static InputHandler inputHandler;
     public static Environment env;
+    public static float timeSince = 0f; // time since last tick
 
     public static void init(){
         // setup rendering and camera
@@ -32,11 +33,19 @@ public class Game {
         batch = new ModelBatch();
 
         crenderer = new ChunkManager();
-        crenderer.addBlock(new Block(0,0,0,BlockType.STONE));
-        crenderer.addBlock(new Block(0,2,0,BlockType.STONE));
+        //crenderer.addBlock(new Block(0,0,0,BlockType.STONE));
         //renderer = new BlockRenderer();
-        //renderer.addBlock(0,0,0, BlockType.STONE);
-        //renderer.addBlock(0,0,1, BlockType.GRASS_BLOCK);
+        crenderer.addBlock(new Block(0,0,0, BlockType.STONE));
+        crenderer.addBlock(new Block(1,0,1, BlockType.STONE));
+        crenderer.addBlock(new Block(-1,0,-1, BlockType.GRASS_BLOCK));
+        crenderer.addBlock(new Block(1,0,-1, BlockType.DIRT));
+        crenderer.addBlock(new Block(-2,0,0, BlockType.DIRT));
+        crenderer.generateChunk(1,1);
+        crenderer.generateChunk(2,2);
+ /*       crenderer.addBlock(new Block(-1,0,-1, BlockType.DIRT));
+        for (int i = 0; i < 20; i++) {
+            crenderer.addBlock(new Block(i,0,i, BlockType.DIRT));
+        }*/
 
         inputHandler = new InputHandler();
         Gdx.input.setInputProcessor(inputHandler);
@@ -47,10 +56,23 @@ public class Game {
         env.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         // player and game logic
         player = new Player(1,1,1,camera);
+
     }
     public static void runFrame(){
         render();
         inputHandler.handleInput();
+        timeSince += Gdx.graphics.getDeltaTime();
+        runTick();
+    }
+    public static void runTick(){
+        //System.out.println((int)Game.player.getPos().x / 16 + " " + (int)Game.player.getPos().z / 16);
+        //System.out.println(Game.player.getPos().cpy().scl(1f/16));
+        if(timeSince < 1f / 20){
+            return;
+        }
+        //System.out.println((int)Game.player.getPos().x + " " + (int)Game.player.getPos().z);
+        //crenderer.handleChunkDistances();
+        timeSince = 0;
     }
     public static void render(){
         //renderer.renderBlocks(batch, env);

@@ -16,18 +16,22 @@ public class InputHandler implements InputProcessor {
     public float degreesPerPixel = 0.3f;
     // for continuous input
     public void handleInput(){
+        float mult = 1f;
+        if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
+            mult = 3f;
+        }
         // forward and backward movement
         if(Gdx.input.isKeyPressed(Input.Keys.W)){
-            Game.player.setPos(Game.player.getPos().cpy().add(Game.camera.direction.cpy().scl(0.1f)));
+            Game.player.setPos(Game.player.getPos().cpy().add(Game.camera.direction.cpy().scl(mult * 2f * Gdx.graphics.getDeltaTime())));
         }
         if(Gdx.input.isKeyPressed(Input.Keys.S)){
-            Game.player.setPos(Game.player.getPos().cpy().sub(Game.camera.direction.cpy().scl(0.1f)));
+            Game.player.setPos(Game.player.getPos().cpy().sub(Game.camera.direction.cpy().scl(mult * 2f * Gdx.graphics.getDeltaTime())));
         }
         if(Gdx.input.isKeyPressed(Input.Keys.A)){
-            Game.player.setPos(Game.player.getPos().cpy().add(Game.camera.up.cpy().crs(Game.camera.direction).scl(0.1f)));
+            Game.player.setPos(Game.player.getPos().cpy().add(Game.camera.up.cpy().crs(Game.camera.direction).scl(mult * 2f * Gdx.graphics.getDeltaTime())));
         }
         if(Gdx.input.isKeyPressed(Input.Keys.D)){
-            Game.player.setPos(Game.player.getPos().cpy().sub(Game.camera.up.cpy().crs(Game.camera.direction).scl(0.1f)));
+            Game.player.setPos(Game.player.getPos().cpy().sub(Game.camera.up.cpy().crs(Game.camera.direction).scl(mult * 2f * Gdx.graphics.getDeltaTime())));
         }
         Game.camera.update();
     }
