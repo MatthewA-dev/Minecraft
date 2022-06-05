@@ -42,24 +42,24 @@ public class Chunk {
             int bchunkz = b.getZ() % 16;
             if (getBlock(b.getX(),b.getY() + 1,b.getZ()) == null) {
                 modelBuilder.part("box", GL20.GL_TRIANGLES, attr, b.topMat)
-                        .rect(-0.5f + bchunkx, 0.5f + bchunky, -0.5f + bchunkz, -0.5f + bchunkx, 0.5f + bchunky, 0.5f + bchunkz, 0.5f + bchunkx, 0.5f + bchunky, 0.5f + bchunkz, 0.5f + bchunkx, 0.5f + bchunky, -0.5f + bchunkz, 0f, 1f, 0f);
+                        .rect(0f + bchunkx, 1f + bchunky, 0f + bchunkz, 0f + bchunkx, 1f + bchunky, 1f + bchunkz, 1f + bchunkx, 1f + bchunky, 1f + bchunkz, 1f + bchunkx, 1f + bchunky, 0f + bchunkz, 0f, 1f, 0f);
             } if (getBlock(b.getX(),b.getY(),b.getZ() - 1) == null){
                 modelBuilder.part("box", GL20.GL_TRIANGLES, attr, b.sideMat)
-                        //.rect(-0.5f + bchunkx, -0.5f + bchunky, -0.5f + bchunkz, 0.5f + bchunkx, -0.5f + bchunky, -0.5f + bchunkz, 0.5f + bchunkx, 0.5f + bchunky, -0.5f + bchunkz, -0.5f + bchunkx, 0.5f + bchunky, -0.5f + bchunkz, 0f, 0f, -1f);
-                        .rect(0.5f + bchunkx, -0.5f + bchunky, -0.5f + bchunkz, -0.5f + bchunkx, -0.5f + bchunky, -0.5f + bchunkz, -0.5f + bchunkx, 0.5f + bchunky, -0.5f + bchunkz, 0.5f + bchunkx, 0.5f + bchunky, -0.5f + bchunkz, 0f, 0f, -1f);
+                        //.rect(0f + bchunkx, 0f + bchunky, 0f + bchunkz, 1f + bchunkx, 0f + bchunky, 0f + bchunkz, 1f + bchunkx, 1f + bchunky, 0f + bchunkz, 0f + bchunkx, 1f + bchunky, 0f + bchunkz, 0f, 0f, -1f);
+                        .rect(1f + bchunkx, 0f + bchunky, 0f + bchunkz, 0f + bchunkx, 0f + bchunky, 0f + bchunkz, 0f + bchunkx, 1f + bchunky, 0f + bchunkz, 1f + bchunkx, 1f + bchunky, 0f + bchunkz, 0f, 0f, -1f);
             } if (getBlock(b.getX(),b.getY(),b.getZ() + 1) == null){
                 modelBuilder.part("box", GL20.GL_TRIANGLES, attr, b.sideMat)
-                        .rect(-0.5f + bchunkx, -0.5f + bchunky, 0.5f + bchunkz, 0.5f + bchunkx, -0.5f + bchunky, 0.5f + bchunkz, 0.5f + bchunkx, 0.5f + bchunky, 0.5f + bchunkz, -0.5f + bchunkx, 0.5f + bchunky, 0.5f + bchunkz, 0f, 0f, -1f);
-                //.rect(-0.5f, -0.5f, 0.5f,// 0.5f, -0.5f, 0.5f, ///0.5f, 0.5f, 0.5f,//// -0.5f, 0.5f, 0.5f,  0f, 0f, -1f);
+                        .rect(0f + bchunkx, 0f + bchunky, 1f + bchunkz, 1f + bchunkx, 0f + bchunky, 1f + bchunkz, 1f + bchunkx, 1f + bchunky, 1f + bchunkz, 0f + bchunkx, 1f + bchunky, 1f + bchunkz, 0f, 0f, -1f);
+                //.rect(0f, 0f, 1f,// 1f, 0f, 1f, ///0.5f, 1f, 1f,//// 0f, 1f, 1f,  0f, 0f, -1f);
             } if (getBlock(b.getX() - 1,b.getY(),b.getZ()) == null) {
                 modelBuilder.part("box", GL20.GL_TRIANGLES, attr, b.sideMat)
-                        .rect(-0.5f + bchunkx, -0.5f + bchunky, -0.5f + bchunkz, -0.5f + bchunkx, -0.5f + bchunky, 0.5f + bchunkz, -0.5f + bchunkx, 0.5f + bchunky, 0.5f + bchunkz, -0.5f + bchunkx, 0.5f + bchunky, -0.5f + bchunkz, -1f, 0f, 0f);
+                        .rect(0f + bchunkx, 0f + bchunky, 0f + bchunkz, 0f + bchunkx, 0f + bchunky, 1f + bchunkz, 0f + bchunkx, 1f + bchunky, 1f + bchunkz, 0f + bchunkx, 1f + bchunky, 0f + bchunkz, -1f, 0f, 0f);
             } if (getBlock(b.getX() + 1,b.getY(),b.getZ()) == null){
                 modelBuilder.part("box", GL20.GL_TRIANGLES, attr, b.sideMat)
-                        .rect(0.5f + bchunkx, -0.5f + bchunky, 0.5f + bchunkz,0.5f + bchunkx, -0.5f + bchunky, -0.5f + bchunkz, 0.5f + bchunkx, 0.5f + bchunky, -0.5f + bchunkz, 0.5f + bchunkx, 0.5f + bchunky, 0.5f + bchunkz,  1f, 0f, 0f);
+                        .rect(1f + bchunkx, 0f + bchunky, 1f + bchunkz,1f + bchunkx, 0f + bchunky, 0f + bchunkz, 1f + bchunkx, 1f + bchunky, 0f + bchunkz, 1f + bchunkx, 1f + bchunky, 1f + bchunkz,  1f, 0f, 0f);
             } if(getBlock(b.getX(),b.getY() - 1,b.getZ()) == null){
                 modelBuilder.part("box", GL20.GL_TRIANGLES, attr, b.botMat)
-                    .rect(-0.5f + bchunkx, -0.5f + bchunky, 0.5f + bchunkz, -0.5f + bchunkx, -0.5f + bchunky, -0.5f + bchunkz, 0.5f + bchunkx, -0.5f + bchunky, -0.5f + bchunkz, 0.5f + bchunkx, -0.5f + bchunky, 0.5f + bchunkz, 0f, -1f, 0f);
+                        .rect(0f + bchunkx, 0f + bchunky, 1f + bchunkz, 0f + bchunkx, 0f + bchunky, 0f + bchunkz, 1f + bchunkx, 0f + bchunky, 0f + bchunkz, 1f + bchunkx, 0f + bchunky, 1f + bchunkz, 0f, -1f, 0f);
             }
 }
         chunkModel = modelBuilder.end();

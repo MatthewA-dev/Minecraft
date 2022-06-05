@@ -79,6 +79,7 @@ public class Game {
         crenderer.render(batch,env);
     }
     public static void dispose(){
-        renderer.dispose();
+        crenderer.dispose();
+        //renderer.dispose();
     }
 }
