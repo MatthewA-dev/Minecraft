@@ -28,10 +28,10 @@ public class InputHandler implements InputProcessor {
             Game.player.setPos(Game.player.getPos().cpy().sub(Game.camera.direction.cpy().scl(mult * 2f * Gdx.graphics.getDeltaTime())));
         }
         if(Gdx.input.isKeyPressed(Input.Keys.A)){
-            Game.player.setPos(Game.player.getPos().cpy().add(Game.camera.up.cpy().crs(Game.camera.direction).scl(mult * 2f * Gdx.graphics.getDeltaTime())));
+            Game.player.setPos(Game.player.getPos().cpy().add(Game.camera.up.cpy().crs(Game.camera.direction).nor().scl(mult * 2f * Gdx.graphics.getDeltaTime())));
         }
         if(Gdx.input.isKeyPressed(Input.Keys.D)){
-            Game.player.setPos(Game.player.getPos().cpy().sub(Game.camera.up.cpy().crs(Game.camera.direction).scl(mult * 2f * Gdx.graphics.getDeltaTime())));
+            Game.player.setPos(Game.player.getPos().cpy().sub(Game.camera.up.cpy().crs(Game.camera.direction).nor().scl(mult * 2f * Gdx.graphics.getDeltaTime())));
         }
         Game.camera.update();
     }

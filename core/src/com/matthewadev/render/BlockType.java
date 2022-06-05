@@ -4,5 +4,7 @@ public enum BlockType {
     EMPTY,
     STONE,
     DIRT,
-    GRASS_BLOCK
+    GRASS_BLOCK,
+    CRAFTING_TABLE,
+    OAK_PLANKS
 }

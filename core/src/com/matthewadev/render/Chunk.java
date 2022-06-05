@@ -33,13 +33,15 @@ public class Chunk {
         ModelBuilder modelBuilder = new ModelBuilder();
         modelBuilder.begin();
         for (Block b : allBlocks) {
-            //MeshPartBuilder meshPartBuilder = modelBuilder.part("box", GL20.GL_TRIANGLES, attr, b.topMat);
+
             // yeah yeah copy pasted code plagiarism, but like look at how big this is man, i aint writing all this
             // plus, i get how it works, im just a bum who likes easy solutions
             // and i had to manually add the offset of the block, cut me some slack okay? im trying.
-            int bchunkx = b.getX() % 16;
-            int bchunky = b.getY();
-            int bchunkz = b.getZ() % 16;
+            Vector3 chunkCoords = b.toChunkCoords();
+            int bchunkx = (int) chunkCoords.x;
+            int bchunky = (int) chunkCoords.y;
+            int bchunkz = (int) chunkCoords.z;
+            //System.out.println(bchunkx + " " + bchunkz + " " + b.getType() + " " + b.toChunkNum() + " " + b.getX() + " " + b.getY() + " " + b.getZ());
             if (getBlock(b.getX(),b.getY() + 1,b.getZ()) == null) {
                 modelBuilder.part("box", GL20.GL_TRIANGLES, attr, b.topMat)
                         .rect(0f + bchunkx, 1f + bchunky, 0f + bchunkz, 0f + bchunkx, 1f + bchunky, 1f + bchunkz, 1f + bchunkx, 1f + bchunky, 1f + bchunkz, 1f + bchunkx, 1f + bchunky, 0f + bchunkz, 0f, 1f, 0f);
@@ -64,7 +66,7 @@ public class Chunk {
 }
         chunkModel = modelBuilder.end();
         instance = new ModelInstance(chunkModel);
-        instance.transform.translate(new Vector3(x * 16f,0f, z * 16f));
+        instance.transform.translate(new Vector3(this.x * 16f,0f, this.z * 16f));
 
 /*        int attr = VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates;
         ModelBuilder modelBuilder = new ModelBuilder();
@@ -77,12 +79,16 @@ public class Chunk {
         chunkModel = modelBuilder.end();
         instance = new ModelInstance(chunkModel);*/
     }
-    public void addBlock(Block block){
+    public void addBlockWithoutCalculation(Block block){
         if(block != null) {
             blocks[block.getY()][Math.abs(block.getX()) % 16][Math.abs(block.getZ()) % 16] = block;
-            allBlocks.add(block);
-            recalculateMesh();
+            addBlockBinSearch(block);
+            //allBlocks.add(block);
         }
+    }
+    public void addBlock(Block block){
+        addBlock(block);
+        recalculateMesh();
     }
     // https://www.geeksforgeeks.org/binary-search/ lazy
     private void addBlockBinSearch(Block block){
@@ -141,7 +147,9 @@ public class Chunk {
         for(Block[][] blocks1 : blocks){
             for(Block[] blocks2 : blocks1){
                 for (Block b : blocks2){
-                    b.dispose();
+                    if(b != null){
+                        b.dispose();
+                    }
                 }
             }
         }

@@ -116,11 +116,20 @@ public class Block {
         }
     }
     public Vector3 toChunkCoords(){
-        return new Vector3(getX() % 16,getY(),getZ() % 16);
+        int cx = getX() % 16;
+        int cz = getZ() % 16;
+        if(cx < 0){
+            cx = 16 - Math.abs(getX()) % 16;
+        }
+        if(cz < 0){
+            cz = 16 - Math.abs(getZ()) % 16;
+        }
+        return new Vector3(cx,getY(),cz);
     }
-    public long toChunkNum(){
+    public int toChunkNum(){
         Vector3 loc = toChunkCoords();
-        return ((long) (loc.x) << 32L) | ( (long) loc.y << 16) | (long)loc.z;
+        return (int) (loc.y * Math.pow(16,2) + loc.x * 16 + loc.z);
+        //return ((long) (loc.x) << 32L) | ( (long) loc.y << 16) | (long)loc.z;
     }
     // closing
     public void dispose(){
