@@ -67,7 +67,7 @@ public class Chunk {
         instance.transform.translate(new Vector3(this.x * 16f,0f, this.z * 16f));
         chunkModel.calculateBoundingBox(bounds);
 
-        PhysicsManager.addChunkToWorld(chunkModel,instance.transform,x,z);
+        PhysicsManager.addChunkToWorld(chunkModel,instance.transform,x,z, allBlocks);
     }
     public void addBlockWithoutCalculation(Block block){
         if(block != null) {
@@ -144,7 +144,7 @@ public class Chunk {
         return blocks[y][x][z];
     }
     public void dispose(){
-        //PhysicsManager.removeChunkFromWorld(x,z);
+        PhysicsManager.removeChunkFromWorld(x,z);
         chunkModel.dispose();
 /*        for(Block[][] blocks1 : blocks){
             for(Block[] blocks2 : blocks1){

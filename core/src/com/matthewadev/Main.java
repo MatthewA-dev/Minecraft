@@ -18,7 +18,7 @@ import com.matthewadev.render.BlockRenderer;
 public class Main extends ApplicationAdapter {
 	@Override
 	public void create () {
-		Bullet.init();
+		Bullet.init(true);
 		Game.init();
 	}
 

@@ -7,13 +7,12 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.Ray;
-import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.physics.bullet.collision.*;
 import com.matthewadev.game.Game;
+import com.matthewadev.render.Block;
 import com.matthewadev.render.Chunk;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class PhysicsManager {
     private static btDefaultCollisionConfiguration collisionConfig;
@@ -47,15 +46,15 @@ public class PhysicsManager {
         chunkColls.remove(chunkI);
     }
     // for chunk models
-    public static void addChunkToWorld(Model m, Matrix4 transform, int x, int z){ // x and z for chunks
+    public static void addChunkToWorld(Model m, Matrix4 transform, int x, int z, ArrayList<Block> allBlocks){ // x and z for chunks
         int i = chunkExists(x,z);
         ChunkCollisionObject c;
         if(i != -1){
             world.removeCollisionObject(chunkColls.get(i).object);
-            chunkColls.get(i).redefineCollisionObject(m, transform);
+            chunkColls.get(i).redefineCollisionObject(m, transform, allBlocks);
             c = chunkColls.get(i);
         }else{
-            chunkColls.add(new ChunkCollisionObject(x,z,m,transform));
+            chunkColls.add(new ChunkCollisionObject(x,z,m,transform, allBlocks));
             c = chunkColls.get(chunkColls.size() - 1);
         }
         world.addCollisionObject(c.object);
@@ -63,20 +62,18 @@ public class PhysicsManager {
 
     public static void checkRayhit(float range){
         Ray ray = Game.camera.getPickRay(Gdx.graphics.getWidth() >> 1, Gdx.graphics.getHeight() >> 1); // fancy division by 2
-        Vector3 from = ray.origin;
+        Vector3 from = ray.origin.cpy();
         Vector3 to = ray.direction.cpy();
 
         to.scl(range);
         to.add(from);
-
-        for(Chunk c: Game.crenderer.getChunks()){
-            ModelInstance i = c.getInstance();
-            Vector3 pos = new Vector3();
-            i.transform.getTranslation(pos);
-            Vector3 intersection = new Vector3();
-            if(Intersector.intersectRayBounds(ray,c.getBounds(),intersection)){
-                Game.crenderer.removeBlock((int) intersection.x, (int) intersection.y, (int) intersection.z);
-            }
+        ClosestRayResultCallback c = new ClosestRayResultCallback(from,to);
+        world.rayTest(from,to,c);
+        if(c.hasHit()){
+            Vector3 hitpoint = new Vector3();
+            c.getHitPointWorld(hitpoint);
+            System.out.println(hitpoint);
+            Game.crenderer.removeBlock((int) hitpoint.x, (int) hitpoint.y, (int) hitpoint.z);
         }
     }
 
