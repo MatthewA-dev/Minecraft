@@ -4,11 +4,9 @@ package com.matthewadev.input;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
-import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector3;
 import com.matthewadev.game.Game;
+import com.matthewadev.physics.PhysicsManager;
 
 // Continuous input handler (e.g. moving the player)
 public class InputHandler implements InputProcessor {
@@ -58,6 +56,7 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        //PhysicsManager.checkRayhit(10f);
         return false;
     }
 

@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.matthewadev.game.Game;
 import com.matthewadev.render.BlockRenderer;
@@ -17,6 +18,7 @@ import com.matthewadev.render.BlockRenderer;
 public class Main extends ApplicationAdapter {
 	@Override
 	public void create () {
+		Bullet.init();
 		Game.init();
 	}
 

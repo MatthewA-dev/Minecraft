@@ -14,23 +14,23 @@ import java.util.Comparator;
 public class BlockRenderer {
     private ArrayList<Block> blocks = new ArrayList<>();
 
-    public void renderBlocks(ModelBatch batch, Environment env){
+/*    public void renderBlocks(ModelBatch batch, Environment env){
         batch.begin(Game.camera);
         for(Block b: blocks){
             b.render(batch, env);
         }
         //batch.getRenderableSorter().sort(Game.camera,batch.);
         batch.end();
-    }
+    }*/
 
     public void addBlock(int x, int y, int z, BlockType b){
         blocks.add(new Block(x,y,z,b));
     }
-    public void dispose(){
+/*    public void dispose(){
         for (Block b: blocks){
             b.dispose();
         }
-    }
+    }*/
 }
 
 /*

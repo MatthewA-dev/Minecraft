@@ -5,10 +5,9 @@ import com.badlogic.gdx.graphics.PerspectiveCamera;
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
-import com.badlogic.gdx.graphics.g3d.decals.CameraGroupStrategy;
-import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.matthewadev.input.InputHandler;
+import com.matthewadev.physics.PhysicsManager;
 import com.matthewadev.render.*;
 
 public class Game {
@@ -22,6 +21,7 @@ public class Game {
     public static float timeSince = 0f; // time since last tick
 
     public static void init(){
+        PhysicsManager.init();
         camera = new PerspectiveCamera(90, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.position.set(1f, 1f, 1f);
         camera.near = 0.01f;
@@ -41,6 +41,12 @@ public class Game {
         // player and game logic
         player = new Player(1,1,1,camera);
         crenderer.generateSeenChunks();
+        //crenderer.addBlock(new Block(0,0,1, BlockType.STONE));
+        crenderer.removeBlock(1,0,0);
+        crenderer.removeBlock(19,0,0);
+        crenderer.removeBlock(-1,0,-1);
+        crenderer.addBlock(new Block(18,6,14,BlockType.CRAFTING_TABLE));
+
 
     }
     public static void runFrame(){

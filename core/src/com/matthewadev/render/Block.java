@@ -24,8 +24,8 @@ public class Block {
     private int y;
     private int z;
     private BlockType type;
-    private ArrayList<Model> models = new ArrayList<>(); // faces of cube
-    private ArrayList<ModelInstance> instances = new ArrayList<>();
+    //private ArrayList<Model> models = new ArrayList<>(); // faces of cube
+    //private ArrayList<ModelInstance> instances = new ArrayList<>();
     public Material topMat = null;
     public Material sideMat = null;
     public Material botMat = null;
@@ -110,31 +110,36 @@ public class Block {
     public BlockType getType(){
         return type;
     }
-    public void render(ModelBatch batch, Environment env){
+/*    public void render(ModelBatch batch, Environment env){
         for(ModelInstance i: instances) {
             batch.render(i, env);
         }
-    }
+    }*/
     public Vector3 toChunkCoords(){
-        int cx = getX() % 16;
-        int cz = getZ() % 16;
-        if(cx < 0){
-            cx = 16 - Math.abs(getX()) % 16;
-        }
-        if(cz < 0){
-            cz = 16 - Math.abs(getZ()) % 16;
-        }
-        return new Vector3(cx,getY(),cz);
+        return convertToChunkCoords(x,y,z);
     }
     public int toChunkNum(){
-        Vector3 loc = toChunkCoords();
-        return (int) (loc.y * Math.pow(16,2) + loc.x * 16 + loc.z);
-        //return ((long) (loc.x) << 32L) | ( (long) loc.y << 16) | (long)loc.z;
+        return convertChunkNum(x,y,z);
     }
     // closing
-    public void dispose(){
+/*    public void dispose(){
         for (Model m : models) {
             m.dispose();
         }
+    }*/
+    public static Vector3 convertToChunkCoords(int x, int y, int z){
+        int cx = x % 16;
+        int cz = z % 16;
+        if(cx < 0){
+            cx = 16 - Math.abs(x) % 16;
+        }
+        if(cz < 0){
+            cz = 16 - Math.abs(z) % 16;
+        }
+        return new Vector3(cx,y,cz);
+    }
+    public static int convertChunkNum(int x, int y, int z){
+        Vector3 loc = convertToChunkCoords(x,y,z);
+        return (int) (loc.y * Math.pow(16,2) + loc.x * 16 + loc.z);
     }
 }

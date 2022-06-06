@@ -27,18 +27,32 @@ public class ChunkManager {
     }
 
     public void addBlock(Block block){
+
         int chunkx = block.getX() / 16;
         int chunkz = block.getZ() / 16;
-        for (Chunk chunk : chunks){
-            if(chunk.x == chunkx && chunk.z == chunkz){
+        for (Chunk chunk : chunks) {
+            if (chunk.x == chunkx && chunk.z == chunkz) {
                 chunk.addBlock(block);
                 return;
             }
         }
         // otherwise new chunk
-        Chunk c = new Chunk(chunkx,chunkz);
+        Chunk c = new Chunk(chunkx, chunkz);
         c.addBlock(block);
         chunks.add(c);
+    }
+    public void removeBlock(Block block){
+        removeBlock(block.getX(),block.getY(),block.getZ());
+    }
+    public void removeBlock(int x, int y, int z){
+        int chunkx = Chunk.getChunkCoord(x);
+        int chunkz = Chunk.getChunkCoord(z);
+        for (Chunk chunk : chunks) {
+            if (chunk.x == chunkx && chunk.z == chunkz) {
+                chunk.removeBlock(x,y,z);
+                return;
+            }
+        }
     }
 
     public Block getBlock(int x, int y, int z){
@@ -67,7 +81,8 @@ public class ChunkManager {
             }
         }
         for (Integer r: removeIndexs) {
-             chunks.remove((int) r);
+            chunks.get(r).dispose();
+            chunks.remove((int) r);
         }
     }
     public void generateSeenChunks(){
@@ -91,5 +106,16 @@ public class ChunkManager {
     public void handleChunkDistances() {
         unloadUnseenChunks();
         generateSeenChunks();
+    }
+    public Chunk getChunkAt(int x, int z){
+        for (Chunk c: chunks) {
+            if(c.x == x && c.z == z){
+                return c;
+            }
+        }
+        return null;
+    }
+    public ArrayList<Chunk> getChunks(){
+        return chunks;
     }
 }
