@@ -42,7 +42,7 @@ public class PhysicsManager {
         if(chunkI == -1){
             return;
         }
-        world.removeCollisionObject(chunkColls.get(chunkI).object);
+        //world.removeCollisionObject(chunkColls.get(chunkI).object);
         chunkColls.remove(chunkI);
     }
     // for chunk models
@@ -50,14 +50,14 @@ public class PhysicsManager {
         int i = chunkExists(x,z);
         ChunkCollisionObject c;
         if(i != -1){
-            world.removeCollisionObject(chunkColls.get(i).object);
+            //world.removeCollisionObject(chunkColls.get(i).object);
             chunkColls.get(i).redefineCollisionObject(m, transform, allBlocks);
             c = chunkColls.get(i);
         }else{
             chunkColls.add(new ChunkCollisionObject(x,z,m,transform, allBlocks));
             c = chunkColls.get(chunkColls.size() - 1);
         }
-        world.addCollisionObject(c.object);
+        //world.addCollisionObject(c.object);
     }
 
     public static void checkRayhit(float range){

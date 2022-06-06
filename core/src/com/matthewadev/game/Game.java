@@ -40,7 +40,6 @@ public class Game {
         env.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         // player and game logic
         player = new Player(1,1,1,camera);
-        crenderer.generateSeenChunks();
         //crenderer.addBlock(new Block(0,0,1, BlockType.STONE));
         crenderer.removeBlock(1,0,0);
         crenderer.removeBlock(19,0,0);
