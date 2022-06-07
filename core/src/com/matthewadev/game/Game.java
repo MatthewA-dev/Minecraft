@@ -19,6 +19,7 @@ public class Game {
     public static InputHandler inputHandler;
     public static Environment env;
     public static float timeSince = 0f; // time since last tick
+    public static Block empty;
 
     public static void init(){
         PhysicsManager.init();
@@ -28,6 +29,7 @@ public class Game {
         camera.far = 300f;
         camera.update();
         TextureManager.loadTextures();
+        empty = new Block(0,0,0, BlockType.EMPTY);
         batch = new ModelBatch();
 
         crenderer = new ChunkManager();
@@ -44,8 +46,10 @@ public class Game {
         crenderer.removeBlock(1,0,0);
         crenderer.removeBlock(19,0,0);
         crenderer.removeBlock(-1,0,-1);
-        crenderer.addBlock(new Block(18,6,14,BlockType.CRAFTING_TABLE));
-
+        for (int i = 0; i < 32; i++) {
+            crenderer.addBlock(new Block(0,0,i,BlockType.CRAFTING_TABLE));
+        }
+        //crenderer.handleChunkDistances();
 
     }
     public static void runFrame(){
@@ -58,7 +62,7 @@ public class Game {
         if(timeSince < 1f / 20){
             return;
         }
-        crenderer.handleChunkDistances();
+        //crenderer.handleChunkDistances();
         timeSince = 0;
     }
     public static void render(){
