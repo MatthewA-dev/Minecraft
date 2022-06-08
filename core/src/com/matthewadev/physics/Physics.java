@@ -1,5 +1,8 @@
 package com.matthewadev.physics;
 
+import com.badlogic.gdx.math.Vector3;
+import com.matthewadev.game.Game;
+
 public class Physics { // in relation to center of player
     float x1;
     float y1;
@@ -33,5 +36,12 @@ public class Physics { // in relation to center of player
 
 
 
+    }
+    public static void getClosestIntersection(Vector3 direction, float x, float y, float z){
+        float slopex = direction.y / direction.x;
+        float slopez = direction.z / direction.x;
+        for(int i = 0; i < direction.x; i++){
+            System.out.println(i + " " + (slopex * i));
+        }
     }
 }

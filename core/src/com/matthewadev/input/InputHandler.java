@@ -6,6 +6,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector3;
 import com.matthewadev.game.Game;
+import com.matthewadev.physics.Physics;
 import com.matthewadev.physics.PhysicsManager;
 import com.matthewadev.physics.RaycastingManager;
 
@@ -57,7 +58,7 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        RaycastingManager.getClosestIntersectionX(Game.camera.direction.x, Game.camera.direction.y, Game.player.getX());
+        Physics.getClosestIntersection(Game.camera.direction.cpy().scl(3f), Game.player.getX(), Game.player.getY(), Game.player.getZ());
         return false;
     }
 
