@@ -48,7 +48,6 @@ public class Chunk {
                         .rect(0f + bchunkx, 0f + bchunky, 1f + bchunkz, 1f + bchunkx, 0f + bchunky, 1f + bchunkz, 1f + bchunkx, 1f + bchunky, 1f + bchunkz, 0f + bchunkx, 1f + bchunky, 1f + bchunkz, 0f, 0f, -1f);
                 //.rect(0f, 0f, 1f,// 1f, 0f, 1f, ///0.5f, 1f, 1f,//// 0f, 1f, 1f,  0f, 0f, -1f);
             } if (getBlock(b.getX() - 1,b.getY(),b.getZ()) == null) {
-                System.out.println("asd");
                 modelBuilder.part("box", GL20.GL_TRIANGLES, attr, b.sideMat)
                         .rect(0f + bchunkx, 0f + bchunky, 0f + bchunkz, 0f + bchunkx, 0f + bchunky, 1f + bchunkz, 0f + bchunkx, 1f + bchunky, 1f + bchunkz, 0f + bchunkx, 1f + bchunky, 0f + bchunkz, -1f, 0f, 0f);
             } if (getBlock(b.getX() + 1,b.getY(),b.getZ()) == null){

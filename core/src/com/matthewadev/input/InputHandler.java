@@ -7,6 +7,7 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector3;
 import com.matthewadev.game.Game;
 import com.matthewadev.physics.PhysicsManager;
+import com.matthewadev.physics.RaycastingManager;
 
 // Continuous input handler (e.g. moving the player)
 public class InputHandler implements InputProcessor {
@@ -56,7 +57,7 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        PhysicsManager.checkRayhit(10f);
+        RaycastingManager.getClosestIntersectionX(Game.camera.direction.x, Game.camera.direction.y, Game.player.getX());
         return false;
     }
 

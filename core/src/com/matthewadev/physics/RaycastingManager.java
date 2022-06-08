@@ -9,6 +9,7 @@ import com.matthewadev.game.Game;
 import com.matthewadev.render.Block;
 import com.matthewadev.render.Chunk;
 public class RaycastingManager {
+    // treating every dimension like a linear equation
     public static void checkccccRayhit(float range){
         Ray ray = Game.camera.getPickRay(Gdx.graphics.getWidth() >> 1, Gdx.graphics.getHeight() >> 1); // fancy division by 2
         Vector3 from = ray.origin;
