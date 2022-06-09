@@ -3,6 +3,8 @@ package com.matthewadev.physics;
 import com.badlogic.gdx.math.Vector3;
 import com.matthewadev.game.Game;
 
+import java.util.ArrayList;
+
 public class Physics { // in relation to center of player
     float x1;
     float y1;
@@ -37,11 +39,31 @@ public class Physics { // in relation to center of player
 
 
     }
-    public static void getClosestIntersection(Vector3 direction, float x, float y, float z){
-        float slopex = direction.y / direction.x;
-        float slopez = direction.z / direction.x;
-        for(int i = 0; i < direction.x; i++){
-            System.out.println(i + " " + (slopex * i));
+    // https://www.flipcode.com/archives/Raytracing_Topics_Techniques-Part_4_Spatial_Subdivisions.shtml
+    // https://web.archive.org/web/20180713020237/http://www.cse.chalmers.se/edu/year/2010/course/TDA361/grid.pdf
+    public static void getClosestIntersection(Vector3 direction, Vector3 pos){
+        float mag = 3.0f;
+        float stepx = 1f;
+        float stepy = 1f;
+        float stepz = 1f;
+        Vector3 cell = new Vector3();
+        if(direction.x < 0){
+            stepx *= -1;
         }
+        if(direction.y < 0){
+            stepy *= -1;
+        }
+        if(direction.z < 0){
+            stepz *= -1;
+        }
+
+        float tMaxX;
+        float tMaxY;
+        float tMaxZ;
+
+        if(direction.x != 0){
+            float rxr = 1.0f / direction.x;
+        }
+        else tMaxX = 1000000;
     }
 }

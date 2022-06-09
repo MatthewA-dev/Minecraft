@@ -58,7 +58,7 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Physics.getClosestIntersection(Game.camera.direction.cpy().scl(3f), Game.player.getX(), Game.player.getY(), Game.player.getZ());
+        Physics.getClosestIntersection(Game.camera.direction, Game.player.getPos().cpy());
         return false;
     }
 
