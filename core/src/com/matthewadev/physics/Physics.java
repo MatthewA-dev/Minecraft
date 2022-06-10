@@ -73,55 +73,101 @@ public class Physics { // in relation to center of player
         //float tMaxX = pos.
 
     }
- /*   def bresenham(startPoint, endPoint):
-    startPoint = [int(startPoint[0]),int(startPoint[1]),int(startPoint[2])]
+    // https://www.geeksforgeeks.org/bresenhams-algorithm-for-3-d-line-drawing/
+    public static void raycastingGood(Vector3 start, Vector3 direction, float mag){
+        int d = 0;
 
-    endPoint = [int(endPoint[0]),int(endPoint[1]),int(endPoint[2])]
+        Vector3 end = start.cpy().add(direction.cpy().scl(mag));
 
-    steepXY = (abs(endPoint[1] - startPoint[1]) > abs(endPoint[0] - startPoint[0]))
-            if(steepXY):
-    startPoint[0], startPoint[1] = startPoint[1], startPoint[0]
-    endPoint[0], endPoint[1] = endPoint[1], endPoint[0]
+        int dx = (int) Math.abs(end.x * 100 - start.x * 100);
+        int dy = (int) Math.abs(end.y * 100 - start.y * 100);
+        int dz = (int) Math.abs(end.z * 100 - start.z * 100);
 
-    steepXZ = (abs(endPoint[2] - startPoint[2]) > abs(endPoint[0] - startPoint[0]))
-            if(steepXZ):
-    startPoint[0], startPoint[2] = startPoint[2], startPoint[0]
-    endPoint[0], endPoint[2] = endPoint[2], endPoint[0]
 
-    delta = [abs(endPoint[0] - startPoint[0]), abs(endPoint[1] - startPoint[1]), abs(endPoint[2] - startPoint[2])]
+        int dx2 = 2 * dx; // slope scaling factors to
+        int dy2 = 2 * dy; // avoid floating point
+        int dz2 = 2 * dz;
 
-    errorXY = delta[0] / 2
-    errorXZ = delta[0] / 2
+        int ix = start.x < end.x ? 1 : -1; // increment direction
+        int iy = start.y < end.y ? 1 : -1;
+        int iz = start.z < end.z ? 1 : -1;
 
-    step = [
-            -1 if startPoint[0] > endPoint[0] else 1,
-            -1 if startPoint[1] > endPoint[1] else 1,
-            -1 if startPoint[2] > endPoint[2] else 1
-            ]
+        int x = (int) (start.x * 100);
+        int y = (int) (start.y * 100);
+        int z = (int) (start.z * 100);
 
-    y = startPoint[1]
-    z = startPoint[2]
+        int endx = (int) (end.x * 100);
+        int endy = (int) (end.y * 100);
+        int endz = (int) (end.z * 100);
 
-            for x in range(startPoint[0], endPoint[0], step[0]):
-    point = [x, y, z]
+        if (dx >= dy && dx >= dz) {
+            float p1 = 2 * dy - dx;
+            float p2 = 2 * dz - dx;
+            while (x != endx) {
+                x += ix;
+                if (p1 >= 0) {
+                    y += iy;
+                    p1 -= 2 * dx;
+                }
+                if (p2 >= 0) {
+                    z += iz;
+                    p2 -= 2 * dx;
+                }
+                if(Game.crenderer.getBlock((x / 100), (y / 100), z / 100) != null) {
+                    Game.crenderer.removeBlock((x / 100), (y / 100), z / 100);
+                    return;
+                }
+            }
 
-            if(steepXZ):
-    point[0], point[2] = point[2], point[0]
-            if(steepXY):
-    point[0], point[1] = point[1], point[0]
+        } else if (dy >= dx && dy >= dz){
+            float p1 = 2 * dx - dy;
+            float p2 = 2 * dz - dy;
+            while (true) {
+                y += iy;
+                if (p1 >= 0) {
+                    x += ix;
+                    p1 -= 2 * dy;
+                }
+                if (p2 >= 0){
+                    p2 -= 2 * dy;
+                    z += iz;
+                }
 
-    print (point)
+                p1 += 2 * dx;
+                p2 += 2 * dz;
+                if(Game.crenderer.getBlock((x / 100), (y / 100),  z / 100) != null){
+                    Game.crenderer.removeBlock((x / 100), (y / 100), z / 100);
+                    return;
+                }
+            }
+        }
+        else {
+            float p1 = 2 * dy - dz;
+            float p2 = 2 * dx - dz;
+            while (true) {
+                p1 = 2 * dy - dz
+                p2 = 2 * dx - dz
+                while (z1 != z2) {
+                    z += iz;
+                    if (p1 >= 0) {
+                        y += iy;
+                        p1 -= 2 * dz;
+                    }
+                    if (p2 >= 0) {
+                        x += ix;
+                        p2 -= 2 * dz;
+                    }
+                    p1 += 2 * dy;
+                    p2 += 2 * dx;
+                    if (Game.crenderer.getBlock((x / 100), (y / 100), z / 100) != null) {
+                        Game.crenderer.removeBlock((x / 100), (y / 100), z / 100);
+                        return;
+                    }
+                }
+            }
+        }
+    }
 
-    errorXY -= delta[1]
-    errorXZ -= delta[2]
-
-            if(errorXY < 0):
-    y += step[1]
-    errorXY += delta[0]
-
-            if(errorXZ < 0):
-    z += step[2]
-    errorXZ += delta[0]*/
     public static void raycast(Vector3 origin, Vector3 direction){
         float maximumSquared = 100f;
         float x = origin.x;
