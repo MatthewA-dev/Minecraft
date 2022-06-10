@@ -60,7 +60,7 @@ public class ChunkManager {
         int chunkz = z / 16;
         for (Chunk chunk : chunks){
             if(chunk.x == chunkx && chunk.z == chunkz){
-                return chunk.getBlock(chunkx, y, chunkz);
+                return chunk.getBlock(x, y, z);
             }
         }
         return null;

@@ -23,10 +23,11 @@ public class Game {
 
     public static void init(){
         PhysicsManager.init();
+        Renderer2D.init();
         camera = new PerspectiveCamera(90, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.position.set(1f, 1f, 1f);
+        //camera.position.set(1f, 1f, 1f);
         camera.near = 0.01f;
-        camera.far = 300f;
+        camera.far = 64f;
         camera.update();
         TextureManager.loadTextures();
         empty = new Block(0,0,0, BlockType.EMPTY);
@@ -54,6 +55,7 @@ public class Game {
     }
     public static void runFrame(){
         render();
+        Renderer2D.render();
         inputHandler.handleInput();
         timeSince += Gdx.graphics.getDeltaTime();
         runTick();

@@ -2,6 +2,8 @@ package com.matthewadev.physics;
 
 import com.badlogic.gdx.math.Vector3;
 import com.matthewadev.game.Game;
+import com.matthewadev.render.Block;
+import com.matthewadev.render.BlockType;
 
 import java.util.ArrayList;
 
@@ -71,119 +73,155 @@ public class Physics { // in relation to center of player
         //float tMaxX = pos.
 
     }
-    function raycast(origin, direction, radius, callback) {
-        // From "A Fast Voxel Traversal Algorithm for Ray Tracing"
-        // by John Amanatides and Andrew Woo, 1987
-        // <http://www.cse.yorku.ca/~amana/research/grid.pdf>
-        // <http://citeseer.ist.psu.edu/viewdoc/summary?doi=10.1.1.42.3443>
-        // Extensions to the described algorithm:
-        //   • Imposed a distance limit.
-        //   • The face passed through to reach the current cube is provided to
-        //     the callback.
+ /*   def bresenham(startPoint, endPoint):
+    startPoint = [int(startPoint[0]),int(startPoint[1]),int(startPoint[2])]
 
-        // The foundation of this algorithm is a parameterized representation of
-        // the provided ray,
-        //                    origin + t * direction,
-        // except that t is not actually stored; rather, at any given point in the
-        // traversal, we keep track of the *greater* t values which we would have
-        // if we took a step sufficient to cross a cube boundary along that axis
-        // (i.e. change the integer part of the coordinate) in the variables
-        // tMaxX, tMaxY, and tMaxZ.
+    endPoint = [int(endPoint[0]),int(endPoint[1]),int(endPoint[2])]
 
-        // Cube containing origin point.
-        var x = Math.floor(origin[0]);
-        var y = Math.floor(origin[1]);
-        var z = Math.floor(origin[2]);
-        // Break out direction vector.
-        var dx = direction[0];
-        var dy = direction[1];
-        var dz = direction[2];
-        // Direction to increment x,y,z when stepping.
-        var stepX = signum(dx);
-        var stepY = signum(dy);
-        var stepZ = signum(dz);
-        // See description above. The initial values depend on the fractional
-        // part of the origin.
-        var tMaxX = intbound(origin[0], dx);
-        var tMaxY = intbound(origin[1], dy);
-        var tMaxZ = intbound(origin[2], dz);
-        // The change in t when taking a step (always positive).
-        var tDeltaX = stepX/dx;
-        var tDeltaY = stepY/dy;
-        var tDeltaZ = stepZ/dz;
-        // Buffer for reporting faces to the callback.
-        var face = vec3.create();
+    steepXY = (abs(endPoint[1] - startPoint[1]) > abs(endPoint[0] - startPoint[0]))
+            if(steepXY):
+    startPoint[0], startPoint[1] = startPoint[1], startPoint[0]
+    endPoint[0], endPoint[1] = endPoint[1], endPoint[0]
 
-        // Avoids an infinite loop.
-        if (dx === 0 && dy === 0 && dz === 0)
-            throw new RangeError("Raycast in zero direction!");
+    steepXZ = (abs(endPoint[2] - startPoint[2]) > abs(endPoint[0] - startPoint[0]))
+            if(steepXZ):
+    startPoint[0], startPoint[2] = startPoint[2], startPoint[0]
+    endPoint[0], endPoint[2] = endPoint[2], endPoint[0]
 
-        // Rescale from units of 1 cube-edge to units of 'direction' so we can
-        // compare with 't'.
-        radius /= Math.sqrt(dx*dx+dy*dy+dz*dz);
+    delta = [abs(endPoint[0] - startPoint[0]), abs(endPoint[1] - startPoint[1]), abs(endPoint[2] - startPoint[2])]
 
-        while (/* ray has not gone past bounds of world */
-                (stepX > 0 ? x < wx : x >= 0) &&
-                        (stepY > 0 ? y < wy : y >= 0) &&
-                        (stepZ > 0 ? z < wz : z >= 0)) {
+    errorXY = delta[0] / 2
+    errorXZ = delta[0] / 2
 
-            // Invoke the callback, unless we are not *yet* within the bounds of the
-            // world.
-            if (!(x < 0 || y < 0 || z < 0 || x >= wx || y >= wy || z >= wz))
-                if (callback(x, y, z, blocks[x*wy*wz + y*wz + z], face))
-                    break;
+    step = [
+            -1 if startPoint[0] > endPoint[0] else 1,
+            -1 if startPoint[1] > endPoint[1] else 1,
+            -1 if startPoint[2] > endPoint[2] else 1
+            ]
 
+    y = startPoint[1]
+    z = startPoint[2]
+
+            for x in range(startPoint[0], endPoint[0], step[0]):
+    point = [x, y, z]
+
+            if(steepXZ):
+    point[0], point[2] = point[2], point[0]
+            if(steepXY):
+    point[0], point[1] = point[1], point[0]
+
+    print (point)
+
+    errorXY -= delta[1]
+    errorXZ -= delta[2]
+
+            if(errorXY < 0):
+    y += step[1]
+    errorXY += delta[0]
+
+            if(errorXZ < 0):
+    z += step[2]
+    errorXZ += delta[0]*/
+    public static void raycast(Vector3 origin, Vector3 direction){
+        float maximumSquared = 100f;
+        float x = origin.x;
+        float y = origin.y;
+        float z = origin.z;
+
+        float dx = direction.x;
+        float dy = direction.y;
+        float dz = direction.z;
+
+        int stepX = signum(dx);
+        int stepY = signum(dy);
+        int stepZ = signum(dz);
+
+        float tMaxX = intbound(origin.x, dx);
+        float tMaxY = intbound(origin.y, dy);
+        float tMaxZ = intbound(origin.z, dz);
+
+        float tDeltaX = (float)stepX/dx;
+        float tDeltaY = (float)stepY/dy;
+        float tDeltaZ = (float)stepZ/dz;
+        if (dx == 0 && dy == 0 && dz == 0){
+            System.out.println("NO");
+            return;
+        }
+        while (true) {
             // tMaxX stores the t-value at which we cross a cube boundary along the
             // X axis, and similarly for Y and Z. Therefore, choosing the least tMax
             // chooses the closest cube boundary. Only the first case of the four
             // has been commented in detail.
             if (tMaxX < tMaxY) {
                 if (tMaxX < tMaxZ) {
-                    if (tMaxX > radius) break;
+                    //if (tMaxX > radSquare) break;
                     // Update which cube we are now in.
                     x += stepX;
                     // Adjust tMaxX to the next X-oriented boundary crossing.
                     tMaxX += tDeltaX;
                     // Record the normal vector of the cube face we entered.
-                    face[0] = -stepX;
+/*                    face[0] = -stepX;
                     face[1] = 0;
-                    face[2] = 0;
+                    face[2] = 0;*/
                 } else {
-                    if (tMaxZ > radius) break;
+                    //if (tMaxZ > radSquare) break;
                     z += stepZ;
                     tMaxZ += tDeltaZ;
-                    face[0] = 0;
+/*                    face[0] = 0;
                     face[1] = 0;
-                    face[2] = -stepZ;
+                    face[2] = -stepZ;*/
                 }
             } else {
                 if (tMaxY < tMaxZ) {
-                    if (tMaxY > radius) break;
+                    //if (tMaxY > radSquare) break;
                     y += stepY;
                     tMaxY += tDeltaY;
-                    face[0] = 0;
+/*                    face[0] = 0;
                     face[1] = -stepY;
-                    face[2] = 0;
+                    face[2] = 0;*/
                 } else {
                     // Identical to the second case, repeated for simplicity in
                     // the conditionals.
-                    if (tMaxZ > radius) break;
+                    //if (tMaxZ > radSquare) break;
                     z += stepZ;
                     tMaxZ += tDeltaZ;
-                    face[0] = 0;
+/*                    face[0] = 0;
                     face[1] = 0;
-                    face[2] = -stepZ;
+                    face[2] = -stepZ;*/
                 }
             }
+            if(tMaxX<tMaxY) {
+                if(tMaxZ<tMaxX) {
+                    if(tMaxZ > 100f) break;
+                } else {
+                    if(tMaxX > 100f) break;
+                }
+            } else {
+                if(tMaxY<tMaxZ) {
+                    if(tMaxY > 100f) break;
+                } else {
+                    if(tMaxZ > 100f) break;
+                }
+            }
+            System.out.print(x + " " + y + " " + z + " ");
+            System.out.print(floorCorrectly(x) + " " + floorCorrectly(y) + " " + floorCorrectly(z) + " ");
+            System.out.println(Game.crenderer.getBlock(floorCorrectly(x),floorCorrectly(y),floorCorrectly(z)));
+            if(Game.crenderer.getBlock(floorCorrectly(x),floorCorrectly(y),floorCorrectly(z)) != null){
+                Game.crenderer.removeBlock(floorCorrectly(x),floorCorrectly(y),floorCorrectly(z));
+                break;
+            }
+        }
+        System.out.println("====================");
+    }
+    public static int floorCorrectly(float num){
+        if(num < 0){
+            return (int) (num - 1);
+        }else{
+            return (int) num;
         }
     }
-    public static int intbound(int s, int ds){
-        if (ds < 0) {
-            return intbound(-s, -ds);
-        } else {
-            s = mod(s, 1);
-            return (1-s)/ds;
-        }
+    public static float intbound(float s, float ds){
+        return 1/ds;
     }
     public static int signum(float x){
         if(x > 0){

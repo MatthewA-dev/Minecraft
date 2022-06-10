@@ -13,6 +13,7 @@ public class Player {
         this.pos = new Vector3(x,y,z);
         this.vel = new Vector3(0,0,0);
         Game.camera.position.set(x,y,z);
+        Game.camera.update();
     }
 
     public void setPos(float x, float y, float z){
