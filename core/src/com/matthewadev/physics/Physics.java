@@ -101,8 +101,8 @@ public class Physics { // in relation to center of player
         int endz = (int) (end.z * 100);
 
         if (dx >= dy && dx >= dz) {
-            float p1 = 2 * dy - dx;
-            float p2 = 2 * dz - dx;
+            int p1 = 2 * dy - dx;
+            int p2 = 2 * dz - dx;
             while (x != endx) {
                 x += ix;
                 if (p1 >= 0) {
@@ -113,6 +113,8 @@ public class Physics { // in relation to center of player
                     z += iz;
                     p2 -= 2 * dx;
                 }
+                p1 += 2 * dy;
+                p2 += 2 * dz;
                 if(Game.crenderer.getBlock((x / 100), (y / 100), z / 100) != null) {
                     Game.crenderer.removeBlock((x / 100), (y / 100), z / 100);
                     return;
@@ -120,9 +122,9 @@ public class Physics { // in relation to center of player
             }
 
         } else if (dy >= dx && dy >= dz){
-            float p1 = 2 * dx - dy;
-            float p2 = 2 * dz - dy;
-            while (true) {
+            int p1 = 2 * dx - dy;
+            int p2 = 2 * dz - dy;
+            while (y != endy) {
                 y += iy;
                 if (p1 >= 0) {
                     x += ix;
@@ -142,9 +144,9 @@ public class Physics { // in relation to center of player
             }
         }
         else {
-            float p1 = 2 * dy - dz;
-            float p2 = 2 * dx - dz;
-            while (true) {
+            int p1 = 2 * dy - dz;
+            int p2 = 2 * dx - dz;
+            while (z != endz) {
                 p1 = 2 * dy - dz
                 p2 = 2 * dx - dz
                 while (z1 != z2) {
