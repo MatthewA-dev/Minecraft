@@ -18,10 +18,12 @@ public class Player {
 
     public void setPos(float x, float y, float z){
         Game.camera.position.set(x,y,z);
+        Game.camera.update();
         this.pos.set(x,y,z);
     }
     public void setPos(Vector3 pos){
         Game.camera.position.set(pos);
+        Game.camera.update();
         this.pos.set(pos);
     }
     public Vector3 getPos(){

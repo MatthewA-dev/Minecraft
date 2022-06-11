@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.matthewadev.game.Game;
 import com.matthewadev.game.WorldGenerator;
+import com.matthewadev.physics.Physics;
 
 import java.util.ArrayList;
 
@@ -27,9 +28,8 @@ public class ChunkManager {
     }
 
     public void addBlock(Block block){
-
-        int chunkx = block.getX() / 16;
-        int chunkz = block.getZ() / 16;
+        int chunkx = Chunk.getChunkCoord(block.getX());
+        int chunkz = Chunk.getChunkCoord(block.getZ());
         for (Chunk chunk : chunks) {
             if (chunk.x == chunkx && chunk.z == chunkz) {
                 chunk.addBlock(block);
@@ -56,8 +56,8 @@ public class ChunkManager {
     }
 
     public Block getBlock(int x, int y, int z){
-        int chunkx = x / 16;
-        int chunkz = z / 16;
+        int chunkx = Chunk.getChunkCoord(x);
+        int chunkz = Chunk.getChunkCoord(z);
         for (Chunk chunk : chunks){
             if(chunk.x == chunkx && chunk.z == chunkz){
                 return chunk.getBlock(x, y, z);
@@ -75,8 +75,8 @@ public class ChunkManager {
     public void unloadUnseenChunks(){
         ArrayList<Integer> removeIndexs = new ArrayList<>();
         for (int i = 0; i < chunks.size(); i++) {
-            if(Math.abs(chunks.get(i).x - (int)(Game.player.getPos().x / 16)) > 2 ||
-                    Math.abs(chunks.get(i).z - (int)(Game.player.getPos().z / 16)) > 2){
+            if(Math.abs(chunks.get(i).x - Chunk.getChunkCoord(Physics.floorCorrectly(Game.player.getX()))) > 2 ||
+                    Math.abs(chunks.get(i).z - Chunk.getChunkCoord(Physics.floorCorrectly(Game.player.getZ()))) > 2){
                 removeIndexs.add(0,i);
             }
         }
@@ -90,15 +90,16 @@ public class ChunkManager {
             for(int z = -2; z <= 2; z++){
                 boolean exists = false;
                 for (Chunk c: chunks) {
-                    if(c.x == x + (int) (Game.player.getPos().x / 16)){
-                        if(c.z == z + (int) (Game.player.getPos().z / 16)){
+                    if(c.x == x + Chunk.getChunkCoord(Physics.floorCorrectly(Game.player.getX()))){
+                        if(c.z == z + Chunk.getChunkCoord(Physics.floorCorrectly(Game.player.getZ()))){
                             exists = true;
                             break;
                         }
                     }
                 }
                 if(!exists) {
-                    chunks.add(WorldGenerator.generateChunk(x + (int) (Game.player.getPos().x / 16), z + (int) (Game.player.getPos().z / 16)));
+                    chunks.add(WorldGenerator.generateChunk(x + Chunk.getChunkCoord(Physics.floorCorrectly(Game.player.getX())),
+                            z + Chunk.getChunkCoord(Physics.floorCorrectly(Game.player.getZ()))));
                 }
             }
         }

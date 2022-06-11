@@ -9,6 +9,7 @@ import com.matthewadev.game.Game;
 import com.matthewadev.physics.Physics;
 import com.matthewadev.physics.PhysicsManager;
 import com.matthewadev.physics.RaycastingManager;
+import com.matthewadev.render.BlockType;
 
 // Continuous input handler (e.g. moving the player)
 public class InputHandler implements InputProcessor {
@@ -58,7 +59,11 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        Physics.raycastingGood(Game.player.getPos(), Game.camera.direction, 100f);
+        if(button == 0 ){
+            Physics.calcCols(Game.player.getPos(), Game.camera.direction, 3.5f, true,null);
+        } else if (button == 1) {
+            Physics.calcCols(Game.player.getPos(), Game.camera.direction, 3.5f, false, BlockType.STONE);
+        }
         //Physics.getClosestIntersection(Game.camera.direction, Game.player.getPos().cpy());
         return false;
     }

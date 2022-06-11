@@ -73,7 +73,11 @@ public class Chunk {
     }
 
     public Block getBlock(int x, int y, int z){
-        if(y >= 128 || y < 0 || !(x >= this.x * 16 && x <= (this.x + 1) * 16 - 1) || !(z >= this.z * 16 && z <= (this.z + 1) * 16 - 1)){ // out of bounds
+        if(y >= 128 || y < 0){ // out of bounds
+            return null;
+        } else if (!(x >= this.x * 16 && x <= (this.x + 1) * 16 - 1)) {
+            return null;
+        }else if(!(z >= this.z * 16 && z <= (this.z + 1) * 16 - 1)){
             return null;
         }
         int low = 0;
@@ -125,7 +129,6 @@ public class Chunk {
         removeBlock(block.getX(), block.getY(),block.getZ());
     }
     public void removeBlock(int x, int y, int z){ // world coordinates
-        Vector3 chunkCoords = Block.convertToChunkCoords(x,y,z);
         int low = 0;
         int high = allBlocks.size() - 1;
         int item = Block.convertChunkNum(x,y,z);
@@ -169,6 +172,10 @@ public class Chunk {
         return bounds;
     }
     public static int getChunkCoord(int c){
-        return (int) Math.floor(c / 16f);
+        if(c < 0){
+            return (c + 1) / 16 - 1;
+        }else{
+            return c / 16;
+        }
     }
 }

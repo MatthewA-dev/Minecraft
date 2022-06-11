@@ -50,8 +50,9 @@ public class Game {
         for (int i = 0; i < 32; i++) {
             crenderer.addBlock(new Block(0,0,i,BlockType.CRAFTING_TABLE));
         }
-        //crenderer.handleChunkDistances();
-
+        crenderer.handleChunkDistances();
+        System.out.println("GHJK");
+        System.out.println(crenderer.getBlock(12,0,-16));
     }
     public static void runFrame(){
         render();

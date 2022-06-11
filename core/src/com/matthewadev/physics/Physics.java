@@ -7,6 +7,9 @@ import com.matthewadev.render.BlockType;
 
 import java.util.ArrayList;
 
+import static java.lang.Math.abs;
+import static java.lang.Math.pow;
+
 public class Physics { // in relation to center of player
     float x1;
     float y1;
@@ -22,6 +25,104 @@ public class Physics { // in relation to center of player
         this.x2 = x2;
         this.y2 = y2;
         this.z2 = z2;
+    }
+    // https://stackoverflow.com/a/55277311/14969155
+    // https://www.gamedev.net/blogs/entry/2265248-voxel-traversal-algorithm-ray-casting/
+    public static void calcCols(Vector3 start, Vector3 direction,float mag, boolean doBreak, BlockType blockType){
+        direction = direction.cpy().scl(mag);
+        int scale = 10;
+        int x1 = (int) ((direction.x + start.x) * scale), y1 = (int) ((direction.y + start.y) * scale), z1 = (int) ((direction.z + start.z) * scale);
+        int x0 = (int) (start.x * scale), y0 = (int) (start.y * scale), z0 = (int) (start.z * scale);
+        int dx = abs(x1 - x0);
+        int dy = abs(y1 - y0);
+        int dz = abs(z1 - z0);
+        int stepX = x0 < x1 ? 1 : -1;
+        int stepY = y0 < y1 ? 1 : -1;
+        int stepZ = z0 < z1 ? 1 : -1;
+        double hypotenuse = Math.sqrt(pow(dx, 2) + pow(dy, 2) + pow(dz, 2));
+        double tMaxX = hypotenuse * 0.5 / dx;
+        double tMaxY = hypotenuse * 0.5 / dy;
+        double tMaxZ = hypotenuse * 0.5 / dz;
+        double tDeltaX = hypotenuse / dx;
+        double tDeltaY = hypotenuse / dy;
+        double tDeltaZ = hypotenuse / dz;
+        Vector3 normal = new Vector3(0f,0f,0f);
+        while (x0 != x1 || y0 != y1 || z0 != z1) {
+            if (tMaxX < tMaxY) {
+                if (tMaxX < tMaxZ) {
+                    normal.set(-stepX,0,0);
+                    x0 = x0 + stepX;
+                    tMaxX = tMaxX + tDeltaX;
+                } else if (tMaxX > tMaxZ) {
+                    normal.set(0f,0,-stepZ);
+                    z0 = z0 + stepZ;
+                    tMaxZ = tMaxZ + tDeltaZ;
+                } else {
+                    normal.set(0,-stepY,0);
+                    x0 = x0 + stepX;
+                    tMaxX = tMaxX + tDeltaX;
+                    z0 = z0 + stepZ;
+                    tMaxZ = tMaxZ + tDeltaZ;
+                }
+            } else if (tMaxX > tMaxY) {
+                if (tMaxY < tMaxZ) {
+                    normal.set(0f,-stepY,0);
+                    y0 = y0 + stepY;
+                    tMaxY = tMaxY + tDeltaY;
+                } else if (tMaxY > tMaxZ) {
+                    normal.set(0,0,-stepZ);
+                    z0 = z0 + stepZ;
+                    tMaxZ = tMaxZ + tDeltaZ;
+                } else {
+                    normal.set(-stepX,0,0);
+                    y0 = y0 + stepY;
+                    tMaxY = tMaxY + tDeltaY;
+                    z0 = z0 + stepZ;
+                    tMaxZ = tMaxZ + tDeltaZ;
+
+                }
+            } else {
+                if (tMaxY < tMaxZ) {
+                    normal.set(0f,-stepY,0);
+                    y0 = y0 + stepY;
+                    tMaxY = tMaxY + tDeltaY;
+                    x0 = x0 + stepX;
+                    tMaxX = tMaxX + tDeltaX;
+                } else if (tMaxY > tMaxZ) {
+                    normal.set(0f,0,-stepZ);
+                    z0 = z0 + stepZ;
+                    tMaxZ = tMaxZ + tDeltaZ;
+                } else {
+                    normal.set(-stepX,0,0);
+                    x0 = x0 + stepX;
+                    tMaxX = tMaxX + tDeltaX;
+                    y0 = y0 + stepY;
+                    tMaxY = tMaxY + tDeltaY;
+                    z0 = z0 + stepZ;
+                    tMaxZ = tMaxZ + tDeltaZ;
+
+                }
+            }
+/*            System.out.println(floorCorrectly((float) x0 / scale) + " " +
+                    floorCorrectly((float) y0 / scale) + " " +
+                    floorCorrectly((float) z0 / scale));*/
+            //System.out.println((x0/10) + " " + (y0/10) + " " + (z0/10)  + " " + Game.crenderer.getBlock((x0/10), (y0/10), z0/10));
+            if (Game.crenderer.getBlock(floorCorrectly((float) x0 / scale),
+                    floorCorrectly((float) y0/ scale),
+                    floorCorrectly((float) z0/ scale)) != null) {
+                if(doBreak) {
+                    Game.crenderer.removeBlock(floorCorrectly((float) x0 / scale),
+                            floorCorrectly((float) y0 / scale),
+                            floorCorrectly((float) z0 / scale));
+
+                }else{
+                    Game.crenderer.addBlock(new Block((int) (floorCorrectly((float) x0 / scale) + normal.x),
+                            (int) (floorCorrectly((float) y0 / scale) + normal.y),
+                            (int) (floorCorrectly((float) z0 / scale) + normal.z), blockType));
+                }
+                return;
+            }
+        }
     }
     public void calculatePossibleCollisions(float originx, float originy, float originz){
         float x1real = originx + x1;
@@ -75,30 +176,23 @@ public class Physics { // in relation to center of player
     }
     // https://www.geeksforgeeks.org/bresenhams-algorithm-for-3-d-line-drawing/
     public static void raycastingGood(Vector3 start, Vector3 direction, float mag){
-        int d = 0;
-
         Vector3 end = start.cpy().add(direction.cpy().scl(mag));
 
-        int dx = (int) Math.abs(end.x * 100 - start.x * 100);
-        int dy = (int) Math.abs(end.y * 100 - start.y * 100);
-        int dz = (int) Math.abs(end.z * 100 - start.z * 100);
+        int dx = (int) abs(end.x * 10 - start.x * 10);
+        int dy = (int) abs(end.y * 10 - start.y * 10);
+        int dz = (int) abs(end.z * 10 - start.z * 10);
 
-
-        int dx2 = 2 * dx; // slope scaling factors to
-        int dy2 = 2 * dy; // avoid floating point
-        int dz2 = 2 * dz;
-
-        int ix = start.x < end.x ? 1 : -1; // increment direction
+        int ix = start.x < end.x ? 1 : -1;
         int iy = start.y < end.y ? 1 : -1;
         int iz = start.z < end.z ? 1 : -1;
 
-        int x = (int) (start.x * 100);
-        int y = (int) (start.y * 100);
-        int z = (int) (start.z * 100);
+        int x = (int) (start.x * 10);
+        int y = (int) (start.y * 10);
+        int z = (int) (start.z * 10);
 
-        int endx = (int) (end.x * 100);
-        int endy = (int) (end.y * 100);
-        int endz = (int) (end.z * 100);
+        int endx = (int) (end.x * 10);
+        int endy = (int) (end.y * 10);
+        int endz = (int) (end.z * 10);
 
         if (dx >= dy && dx >= dz) {
             int p1 = 2 * dy - dx;
@@ -115,8 +209,8 @@ public class Physics { // in relation to center of player
                 }
                 p1 += 2 * dy;
                 p2 += 2 * dz;
-                if(Game.crenderer.getBlock((x / 100), (y / 100), z / 100) != null) {
-                    Game.crenderer.removeBlock((x / 100), (y / 100), z / 100);
+                if(Game.crenderer.getBlock((x / 10), (y / 10), z / 10) != null) {
+                    Game.crenderer.removeBlock((x / 10), (y / 10), z / 10);
                     return;
                 }
             }
@@ -137,8 +231,8 @@ public class Physics { // in relation to center of player
 
                 p1 += 2 * dx;
                 p2 += 2 * dz;
-                if(Game.crenderer.getBlock((x / 100), (y / 100),  z / 100) != null){
-                    Game.crenderer.removeBlock((x / 100), (y / 100), z / 100);
+                if(Game.crenderer.getBlock((x / 10), (y / 10),  z / 10) != null){
+                    Game.crenderer.removeBlock((x / 10), (y / 10), z / 10);
                     return;
                 }
             }
@@ -147,9 +241,9 @@ public class Physics { // in relation to center of player
             int p1 = 2 * dy - dz;
             int p2 = 2 * dx - dz;
             while (z != endz) {
-                p1 = 2 * dy - dz
-                p2 = 2 * dx - dz
-                while (z1 != z2) {
+                p1 = 2 * dy - dz;
+                p2 = 2 * dx - dz;
+                while (z != endz) {
                     z += iz;
                     if (p1 >= 0) {
                         y += iy;
@@ -161,8 +255,8 @@ public class Physics { // in relation to center of player
                     }
                     p1 += 2 * dy;
                     p2 += 2 * dx;
-                    if (Game.crenderer.getBlock((x / 100), (y / 100), z / 100) != null) {
-                        Game.crenderer.removeBlock((x / 100), (y / 100), z / 100);
+                    if (Game.crenderer.getBlock((x / 10), (y / 10), z / 10) != null) {
+                        Game.crenderer.removeBlock((x / 10), (y / 10), z / 10);
                         return;
                     }
                 }
