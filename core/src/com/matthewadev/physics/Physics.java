@@ -5,8 +5,6 @@ import com.matthewadev.game.Game;
 import com.matthewadev.render.Block;
 import com.matthewadev.render.BlockType;
 
-import java.util.ArrayList;
-
 import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 
@@ -28,7 +26,8 @@ public class Physics { // in relation to center of player
     }
     // https://stackoverflow.com/a/55277311/14969155
     // https://www.gamedev.net/blogs/entry/2265248-voxel-traversal-algorithm-ray-casting/
-    public static void calcCols(Vector3 start, Vector3 direction,float mag, boolean doBreak, BlockType blockType){
+    public static Vector3[] calcCols(Vector3 start, Vector3 direction, float mag){
+        Vector3[] returns = new Vector3[2];
         direction = direction.cpy().scl(mag);
         int scale = 10;
         int x1 = (int) ((direction.x + start.x) * scale), y1 = (int) ((direction.y + start.y) * scale), z1 = (int) ((direction.z + start.z) * scale);
@@ -50,15 +49,15 @@ public class Physics { // in relation to center of player
         while (x0 != x1 || y0 != y1 || z0 != z1) {
             if (tMaxX < tMaxY) {
                 if (tMaxX < tMaxZ) {
-                    normal.set(-stepX,0,0);
+                    normal.set(-stepX, 0, 0);
                     x0 = x0 + stepX;
                     tMaxX = tMaxX + tDeltaX;
                 } else if (tMaxX > tMaxZ) {
-                    normal.set(0f,0,-stepZ);
+                    normal.set(0f, 0, -stepZ);
                     z0 = z0 + stepZ;
                     tMaxZ = tMaxZ + tDeltaZ;
                 } else {
-                    normal.set(0,-stepY,0);
+                    normal.set(0, -stepY, 0);
                     x0 = x0 + stepX;
                     tMaxX = tMaxX + tDeltaX;
                     z0 = z0 + stepZ;
@@ -66,15 +65,15 @@ public class Physics { // in relation to center of player
                 }
             } else if (tMaxX > tMaxY) {
                 if (tMaxY < tMaxZ) {
-                    normal.set(0f,-stepY,0);
+                    normal.set(0f, -stepY, 0);
                     y0 = y0 + stepY;
                     tMaxY = tMaxY + tDeltaY;
                 } else if (tMaxY > tMaxZ) {
-                    normal.set(0,0,-stepZ);
+                    normal.set(0, 0, -stepZ);
                     z0 = z0 + stepZ;
                     tMaxZ = tMaxZ + tDeltaZ;
                 } else {
-                    normal.set(-stepX,0,0);
+                    normal.set(-stepX, 0, 0);
                     y0 = y0 + stepY;
                     tMaxY = tMaxY + tDeltaY;
                     z0 = z0 + stepZ;
@@ -83,17 +82,17 @@ public class Physics { // in relation to center of player
                 }
             } else {
                 if (tMaxY < tMaxZ) {
-                    normal.set(0f,-stepY,0);
+                    normal.set(0f, -stepY, 0);
                     y0 = y0 + stepY;
                     tMaxY = tMaxY + tDeltaY;
                     x0 = x0 + stepX;
                     tMaxX = tMaxX + tDeltaX;
                 } else if (tMaxY > tMaxZ) {
-                    normal.set(0f,0,-stepZ);
+                    normal.set(0f, 0, -stepZ);
                     z0 = z0 + stepZ;
                     tMaxZ = tMaxZ + tDeltaZ;
                 } else {
-                    normal.set(-stepX,0,0);
+                    normal.set(-stepX, 0, 0);
                     x0 = x0 + stepX;
                     tMaxX = tMaxX + tDeltaX;
                     y0 = y0 + stepY;
@@ -108,23 +107,29 @@ public class Physics { // in relation to center of player
                     floorCorrectly((float) z0 / scale));*/
             //System.out.println((x0/10) + " " + (y0/10) + " " + (z0/10)  + " " + Game.crenderer.getBlock((x0/10), (y0/10), z0/10));
             if (Game.crenderer.getBlock(floorCorrectly((float) x0 / scale),
-                    floorCorrectly((float) y0/ scale),
-                    floorCorrectly((float) z0/ scale)) != null) {
-                if(doBreak) {
-                    Game.crenderer.removeBlock(floorCorrectly((float) x0 / scale),
-                            floorCorrectly((float) y0 / scale),
-                            floorCorrectly((float) z0 / scale));
-
-                }else{
-                    Game.crenderer.addBlock(new Block((int) (floorCorrectly((float) x0 / scale) + normal.x),
-                            (int) (floorCorrectly((float) y0 / scale) + normal.y),
-                            (int) (floorCorrectly((float) z0 / scale) + normal.z), blockType));
-                }
-                return;
+                    floorCorrectly((float) y0 / scale),
+                    floorCorrectly((float) z0 / scale)) != null) {
+                returns[0] = new Vector3(floorCorrectly((float) x0 / scale), floorCorrectly((float) y0 / scale), floorCorrectly((float) z0 / scale));
+                returns[1] = normal;
+                return returns;
             }
         }
+        return null;
     }
-    public void calculatePossibleCollisions(float originx, float originy, float originz){
+    public static void destroyBlockWhereLooking(){
+        try {
+            Vector3 block = calcCols(Game.camera.position, Game.camera.direction, 3.5f)[0];
+            Game.crenderer.removeBlock((int) block.x, (int) block.y, (int) block.z);
+        }catch(NullPointerException ignored){}
+    }
+    public static void addBlockWhereLooking(BlockType type){
+        try {
+            Vector3[] block = calcCols(Game.camera.position, Game.camera.direction, 3.5f);
+            Block b = new Block((int) (block[0].x + block[1].x), (int) (block[0].y + block[1].y), (int) (block[0].z + block[1].z), type);
+            Game.crenderer.addBlock(b);
+        }catch(NullPointerException ignored){}
+    }
+/*    public void calculatePossibleCollisions(float originx, float originy, float originz){
         float x1real = originx + x1;
         float y1real = originy + y1;
         float z1real = originz + z1;
@@ -302,34 +307,34 @@ public class Physics { // in relation to center of player
                     // Adjust tMaxX to the next X-oriented boundary crossing.
                     tMaxX += tDeltaX;
                     // Record the normal vector of the cube face we entered.
-/*                    face[0] = -stepX;
+*//*                    face[0] = -stepX;
                     face[1] = 0;
-                    face[2] = 0;*/
+                    face[2] = 0;*//*
                 } else {
                     //if (tMaxZ > radSquare) break;
                     z += stepZ;
                     tMaxZ += tDeltaZ;
-/*                    face[0] = 0;
+*//*                    face[0] = 0;
                     face[1] = 0;
-                    face[2] = -stepZ;*/
+                    face[2] = -stepZ;*//*
                 }
             } else {
                 if (tMaxY < tMaxZ) {
                     //if (tMaxY > radSquare) break;
                     y += stepY;
                     tMaxY += tDeltaY;
-/*                    face[0] = 0;
+*//*                    face[0] = 0;
                     face[1] = -stepY;
-                    face[2] = 0;*/
+                    face[2] = 0;*//*
                 } else {
                     // Identical to the second case, repeated for simplicity in
                     // the conditionals.
                     //if (tMaxZ > radSquare) break;
                     z += stepZ;
                     tMaxZ += tDeltaZ;
-/*                    face[0] = 0;
+*//*                    face[0] = 0;
                     face[1] = 0;
-                    face[2] = -stepZ;*/
+                    face[2] = -stepZ;*//*
                 }
             }
             if(tMaxX<tMaxY) {
@@ -354,7 +359,7 @@ public class Physics { // in relation to center of player
             }
         }
         System.out.println("====================");
-    }
+    }*/
     public static int floorCorrectly(float num){
         if(num < 0){
             return (int) (num - 1);

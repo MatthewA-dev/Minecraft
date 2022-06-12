@@ -51,14 +51,15 @@ public class Game {
             crenderer.addBlock(new Block(0,0,i,BlockType.CRAFTING_TABLE));
         }
         crenderer.handleChunkDistances();
-        System.out.println("GHJK");
-        System.out.println(crenderer.getBlock(12,0,-16));
     }
     public static void runFrame(){
         render();
         Renderer2D.render();
         inputHandler.handleInput();
         timeSince += Gdx.graphics.getDeltaTime();
+        if(!player.isFlying) {
+            player.addVel(0, -0.25f * Gdx.graphics.getDeltaTime(), 0);
+        }
         runTick();
     }
     public static void runTick(){

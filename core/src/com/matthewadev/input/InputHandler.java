@@ -7,8 +7,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector3;
 import com.matthewadev.game.Game;
 import com.matthewadev.physics.Physics;
-import com.matthewadev.physics.PhysicsManager;
-import com.matthewadev.physics.RaycastingManager;
 import com.matthewadev.render.BlockType;
 
 // Continuous input handler (e.g. moving the player)
@@ -17,24 +15,79 @@ public class InputHandler implements InputProcessor {
     public float degreesPerPixel = 0.3f;
     // for continuous input
     public void handleInput(){
-        float mult = 1f;
-        if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
-            mult = 3f;
-        }
+        Vector3 dir = Game.camera.direction.cpy();
+        dir.y = 0;
+        dir = dir.nor();
         // forward and backward movement
-        if(Gdx.input.isKeyPressed(Input.Keys.W)){
-            Game.player.setPos(Game.player.getPos().cpy().add(Game.camera.direction.cpy().scl(mult * 2f * Gdx.graphics.getDeltaTime())));
+        float speed;
+        float speedy;
+        if(Game.player.isFlying) {
+            speed = 2f;
+            speedy = 5f;
+            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+                Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+                dir.x = -dir.x;
+                dir.z = -dir.z;
+                Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+                //Game.player.setPos(Game.player.getPos().cpy().sub(Game.camera.direction.cpy().scl(mult * 2f * Gdx.graphics.getDeltaTime())));
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+                dir = Game.camera.up.cpy().crs(Game.camera.direction);
+                dir.y = 0;
+                dir = dir.nor();
+                Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                dir = Game.camera.up.cpy().crs(Game.camera.direction);
+                dir.y = 0;
+                dir = dir.nor();
+                dir.x = -dir.x;
+                dir.z = -dir.z;
+                Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                Game.player.addVel(Game.camera.up.cpy().scl(speedy * Gdx.graphics.getDeltaTime()));
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+                Game.player.addVel(Game.camera.up.cpy().scl(-speedy * Gdx.graphics.getDeltaTime()));
+            }
+            Game.player.reduceVelocity();
+        }else{
+            speed = 6f;
+            speedy = 6f;
+            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+                Game.player.addPos(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+                dir.x = -dir.x;
+                dir.z = -dir.z;
+                Game.player.addPos(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+                //Game.player.setPos(Game.player.getPos().cpy().sub(Game.camera.direction.cpy().scl(mult * 2f * Gdx.graphics.getDeltaTime())));
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+                dir = Game.camera.up.cpy().crs(Game.camera.direction);
+                dir.y = 0;
+                dir = dir.nor();
+                Game.player.addPos(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                dir = Game.camera.up.cpy().crs(Game.camera.direction);
+                dir.y = 0;
+                dir = dir.nor();
+                dir.x = -dir.x;
+                dir.z = -dir.z;
+                Game.player.addPos(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                Game.player.addPos(Game.camera.up.cpy().scl(speedy * Gdx.graphics.getDeltaTime()));
+            }
+            if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+                Game.player.addPos(Game.camera.up.cpy().scl(-speedy * Gdx.graphics.getDeltaTime()));
+            }
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.S)){
-            Game.player.setPos(Game.player.getPos().cpy().sub(Game.camera.direction.cpy().scl(mult * 2f * Gdx.graphics.getDeltaTime())));
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.A)){
-            Game.player.setPos(Game.player.getPos().cpy().add(Game.camera.up.cpy().crs(Game.camera.direction).nor().scl(mult * 2f * Gdx.graphics.getDeltaTime())));
-        }
-        if(Gdx.input.isKeyPressed(Input.Keys.D)){
-            Game.player.setPos(Game.player.getPos().cpy().sub(Game.camera.up.cpy().crs(Game.camera.direction).nor().scl(mult * 2f * Gdx.graphics.getDeltaTime())));
-        }
-        Game.camera.update();
+        Game.player.updatePlayerPos();
     }
 
     @Override
@@ -42,6 +95,9 @@ public class InputHandler implements InputProcessor {
         switch(keycode){
             case Input.Keys.R:
                 Game.player.setPos(1f,1f,1f);
+                break;
+            case Input.Keys.H:
+                Game.player.isFlying = !Game.player.isFlying;
                 break;
         }
         return false;
@@ -59,11 +115,12 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if(button == 0 ){
-            Physics.calcCols(Game.player.getPos(), Game.camera.direction, 3.5f, true,null);
+        if(button == 0){
+            Physics.destroyBlockWhereLooking();
         } else if (button == 1) {
-            Physics.calcCols(Game.player.getPos(), Game.camera.direction, 3.5f, false, BlockType.STONE);
+            Physics.addBlockWhereLooking(BlockType.STONE);
         }
+        Game.camera.update();
         //Physics.getClosestIntersection(Game.camera.direction, Game.player.getPos().cpy());
         return false;
     }
@@ -75,6 +132,7 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
+        mouseMoved(screenX, screenY);
         return false;
     }
 
