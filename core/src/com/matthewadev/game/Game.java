@@ -57,9 +57,6 @@ public class Game {
         Renderer2D.render();
         inputHandler.handleInput();
         timeSince += Gdx.graphics.getDeltaTime();
-        if(!player.isFlying) {
-            player.addVel(0, -0.25f * Gdx.graphics.getDeltaTime(), 0);
-        }
         runTick();
     }
     public static void runTick(){

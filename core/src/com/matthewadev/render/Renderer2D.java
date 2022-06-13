@@ -29,7 +29,8 @@ public class Renderer2D {
         spriteBatch.begin();
         font.draw(spriteBatch, "+", crosshairoffsetx, crosshairoffsety);
         font.draw(spriteBatch, "X: " + Game.player.getPos().x + "\nY: " + Game.player.getPos().y + "\nZ: " + Game.player.getPos().z +
-                "\n Flying: " + Game.player.isFlying, 0, Gdx.graphics.getHeight());
+                "\n Flying: " + Game.player.isFlying +
+                "\n Is on Ground: " + Game.player.isOnGround, 0, Gdx.graphics.getHeight());
         spriteBatch.end();
     }
 }

@@ -53,24 +53,23 @@ public class InputHandler implements InputProcessor {
             if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
                 Game.player.addVel(Game.camera.up.cpy().scl(-speedy * Gdx.graphics.getDeltaTime()));
             }
-            Game.player.reduceVelocity();
         }else{
-            speed = 6f;
+            speed = 5f;
             speedy = 6f;
             if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                Game.player.addPos(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+                Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
             }
             if (Gdx.input.isKeyPressed(Input.Keys.S)) {
                 dir.x = -dir.x;
                 dir.z = -dir.z;
-                Game.player.addPos(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+                Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
                 //Game.player.setPos(Game.player.getPos().cpy().sub(Game.camera.direction.cpy().scl(mult * 2f * Gdx.graphics.getDeltaTime())));
             }
             if (Gdx.input.isKeyPressed(Input.Keys.A)) {
                 dir = Game.camera.up.cpy().crs(Game.camera.direction);
                 dir.y = 0;
                 dir = dir.nor();
-                Game.player.addPos(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+                Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
             }
             if (Gdx.input.isKeyPressed(Input.Keys.D)) {
                 dir = Game.camera.up.cpy().crs(Game.camera.direction);
@@ -78,10 +77,8 @@ public class InputHandler implements InputProcessor {
                 dir = dir.nor();
                 dir.x = -dir.x;
                 dir.z = -dir.z;
-                Game.player.addPos(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+                Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
             }
-
-            Game.player.addVel(0,-1f * Gdx.graphics.getDeltaTime(),0);
         }
         Game.player.updatePlayerPos();
     }
@@ -96,7 +93,7 @@ public class InputHandler implements InputProcessor {
                 Game.player.isFlying = !Game.player.isFlying;
                 break;
             case Input.Keys.SPACE:
-                Game.player.addVel(0f,0.1f,0f);
+                Game.player.addVel(0f,0.25f,0f);
                 break;
         }
         return false;

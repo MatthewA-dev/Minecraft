@@ -1,5 +1,6 @@
 package com.matthewadev.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.matthewadev.physics.Physics;
 
@@ -35,35 +36,52 @@ public class Player {
         for (int addx = -1; addx < 2; addx += 2) {
             for (int addy = -1; addy < 2; addy += 2) {
                 for (int addz = -1; addz < 2; addz += 2) {
-                    Vector3 origin = new Vector3(pos.x + (width / 2f) * addx, pos.y + (height) * addy, pos.z + (width / 2f) * addz);
-                    Vector3[] collision = Physics.calcCols(origin, vel, 0f, false, false, 100);
+                    Vector3 origin = new Vector3(pos.x + (width / 2f) * addx, pos.y + (height) * (addy == -1 ? -1 : 0), pos.z + (width / 2f) * addz);
+                    Vector3[] collision = Physics.calcCols(origin, vel, 0f, false, false, 1000);
                     if(collision != null){
                         Vector3 normal = collision[1];
-                        if(normal.x != 0){
+                        /*if(normal.x != 0){
                             pos.z = collision[0].z + (width / 2f) * Physics.signum(collision[1].z) + (width / 2f) * collision[1].z;
                             pos.y = collision[0].y + (height) * Physics.signum(collision[1].y) - (height);
                             vel.x = 0;
-                        }
+                        }*/
                         if(normal.y != 0){
-                            pos.x = collision[0].x + (width / 2f) * Physics.signum(collision[1].x) + (width / 2f) * collision[1].x;
-                            pos.z = collision[0].z + (width / 2f) * Physics.signum(collision[1].z) + (width / 2f) * collision[1].z;
+                            pos.x = collision[0].x - (width / 2f) * addx;
+                            pos.z = collision[0].z - (width / 2f) * addz;
+                            pos.y = collision[0].y - (height) * (addy == -1 ? -1 : 0) + (2f / 1000);
                             vel.y = 0;
+                            isOnGround = true;
+                        }else{
+                            isOnGround = false;
                         }
-                        if(normal.z != 0){
+                        /*if(normal.z != 0){
                             pos.x = collision[0].x + (width / 2f) * Physics.signum(collision[1].x) + (width / 2f) * collision[1].x;
                             pos.y = collision[0].y + (height) * Physics.signum(collision[1].y) - (height);
                             vel.z = 0;
-                        }
+                        }*/
                         hasCollided = true;
+                    }else{
+                        isOnGround = false;
                     }
                     //cornerCollisions.add(Physics.calcCols(origin, vel, 0f, false));
                 }
             }
         }
+        if(!isFlying && !isOnGround) {
+            addVel(0, -1f * Gdx.graphics.getDeltaTime(), 0);
+        }
         if(!hasCollided){
             this.pos.add(this.vel);
-            updateCam();
         }
+        if(isFlying) {
+            this.vel.x *= 0.9;
+            this.vel.z *= 0.9;
+            this.vel.y *= 0.5;
+        }else{
+            this.vel.x *= 0.5;
+            this.vel.z *= 0.5;
+        }
+        updateCam();
     }
     public boolean isColliding(){ // checks if hit box is inside any blocks
         float x = pos.x;
@@ -78,14 +96,6 @@ public class Player {
                 Game.crenderer.getBlock(x + width / 2f, y - height, z + width / 2f) != null ||
                 Game.crenderer.getBlock(x + width / 2f, y, z + width / 2f) != null;
     }
-    public void reduceVelocity(){
-        if(isFlying) {
-            this.vel.x *= 0.9;
-            this.vel.z *= 0.9;
-            this.vel.y *= 0.5;
-        }
-    }
-
     public void setPos(float x, float y, float z){
         this.pos.set(x,y,z);
         updateCam();

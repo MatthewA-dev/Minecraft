@@ -114,7 +114,7 @@ public class Physics {
                 if(doRounding) {
                     returns[0] = new Vector3(floorCorrectly((float) x0 / scale), floorCorrectly((float) y0 / scale), floorCorrectly((float) z0 / scale));
                 }else{
-                    returns[0] = new Vector3((float) x0 / scale, (float) y0 / scale, (float) z0 / scale);
+                    returns[0] = new Vector3(((float) x0) / scale, ((float) y0) / scale, ((float) z0) / scale);
                 }
                 returns[1] = normal;
                 return returns;
