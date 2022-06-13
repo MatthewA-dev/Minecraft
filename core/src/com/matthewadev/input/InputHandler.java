@@ -12,7 +12,7 @@ import com.matthewadev.render.BlockType;
 // Continuous input handler (e.g. moving the player)
 public class InputHandler implements InputProcessor {
     private Vector3 tmp = new Vector3(); // used for camera rotation
-    public float degreesPerPixel = 0.3f;
+    public float degreesPerPixel = 0.15f;
     // for continuous input
     public void handleInput(){
         Vector3 dir = Game.camera.direction.cpy();
@@ -22,7 +22,7 @@ public class InputHandler implements InputProcessor {
         float speed;
         float speedy;
         if(Game.player.isFlying) {
-            speed = 2f;
+            speed = 1.2f;
             speedy = 5f;
             if (Gdx.input.isKeyPressed(Input.Keys.W)) {
                 Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
@@ -80,12 +80,8 @@ public class InputHandler implements InputProcessor {
                 dir.z = -dir.z;
                 Game.player.addPos(dir.scl(speed * Gdx.graphics.getDeltaTime()));
             }
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                Game.player.addPos(Game.camera.up.cpy().scl(speedy * Gdx.graphics.getDeltaTime()));
-            }
-            if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
-                Game.player.addPos(Game.camera.up.cpy().scl(-speedy * Gdx.graphics.getDeltaTime()));
-            }
+
+            Game.player.addVel(0,-1f * Gdx.graphics.getDeltaTime(),0);
         }
         Game.player.updatePlayerPos();
     }
@@ -98,6 +94,9 @@ public class InputHandler implements InputProcessor {
                 break;
             case Input.Keys.H:
                 Game.player.isFlying = !Game.player.isFlying;
+                break;
+            case Input.Keys.SPACE:
+                Game.player.addVel(0f,0.1f,0f);
                 break;
         }
         return false;
@@ -118,7 +117,7 @@ public class InputHandler implements InputProcessor {
         if(button == 0){
             Physics.destroyBlockWhereLooking();
         } else if (button == 1) {
-            Physics.addBlockWhereLooking(BlockType.STONE);
+            Physics.addBlockWhereLooking(BlockType.CRAFTING_TABLE);
         }
         Game.camera.update();
         //Physics.getClosestIntersection(Game.camera.direction, Game.player.getPos().cpy());

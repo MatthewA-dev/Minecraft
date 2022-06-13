@@ -42,7 +42,7 @@ public class Game {
         env.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
         env.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
         // player and game logic
-        player = new Player(1,1,1);
+        player = new Player(1,5,1);
         //crenderer.addBlock(new Block(0,0,1, BlockType.STONE));
         crenderer.removeBlock(1,0,0);
         crenderer.removeBlock(19,0,0);

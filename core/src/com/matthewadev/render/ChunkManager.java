@@ -54,7 +54,9 @@ public class ChunkManager {
             }
         }
     }
-
+    public Block getBlock(float x, float y, float z){
+        return getBlock(Physics.floorCorrectly(x), Physics.floorCorrectly(y), Physics.floorCorrectly(z));
+    }
     public Block getBlock(int x, int y, int z){
         int chunkx = Chunk.getChunkCoord(x);
         int chunkz = Chunk.getChunkCoord(z);

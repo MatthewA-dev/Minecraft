@@ -8,7 +8,7 @@ import com.matthewadev.render.BlockType;
 import static java.lang.Math.abs;
 import static java.lang.Math.pow;
 
-public class Physics { // in relation to center of player
+public class Physics {
     float x1;
     float y1;
     float z1;
@@ -26,10 +26,13 @@ public class Physics { // in relation to center of player
     }
     // https://stackoverflow.com/a/55277311/14969155
     // https://www.gamedev.net/blogs/entry/2265248-voxel-traversal-algorithm-ray-casting/
-    public static Vector3[] calcCols(Vector3 start, Vector3 direction, float mag){
+    public static Vector3[] calcCols(Vector3 start, Vector3 direction, float mag, boolean scaleDirection, boolean doRounding, int scale){
         Vector3[] returns = new Vector3[2];
-        direction = direction.cpy().scl(mag);
-        int scale = 10;
+        if(scaleDirection) {
+            direction = direction.cpy().scl(mag);
+        }else{
+            mag = (float) Math.sqrt(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
+        }
         int x1 = (int) ((direction.x + start.x) * scale), y1 = (int) ((direction.y + start.y) * scale), z1 = (int) ((direction.z + start.z) * scale);
         int x0 = (int) (start.x * scale), y0 = (int) (start.y * scale), z0 = (int) (start.z * scale);
         int dx = abs(x1 - x0);
@@ -38,13 +41,12 @@ public class Physics { // in relation to center of player
         int stepX = x0 < x1 ? 1 : -1;
         int stepY = y0 < y1 ? 1 : -1;
         int stepZ = z0 < z1 ? 1 : -1;
-        double hypotenuse = Math.sqrt(pow(dx, 2) + pow(dy, 2) + pow(dz, 2));
-        double tMaxX = hypotenuse * 0.5 / dx;
-        double tMaxY = hypotenuse * 0.5 / dy;
-        double tMaxZ = hypotenuse * 0.5 / dz;
-        double tDeltaX = hypotenuse / dx;
-        double tDeltaY = hypotenuse / dy;
-        double tDeltaZ = hypotenuse / dz;
+        double tMaxX = mag * 0.5 / dx;
+        double tMaxY = mag * 0.5 / dy;
+        double tMaxZ = mag * 0.5 / dz;
+        double tDeltaX = mag / dx;
+        double tDeltaY = mag / dy;
+        double tDeltaZ = mag / dz;
         Vector3 normal = new Vector3(0f,0f,0f);
         while (x0 != x1 || y0 != y1 || z0 != z1) {
             if (tMaxX < tMaxY) {
@@ -109,7 +111,11 @@ public class Physics { // in relation to center of player
             if (Game.crenderer.getBlock(floorCorrectly((float) x0 / scale),
                     floorCorrectly((float) y0 / scale),
                     floorCorrectly((float) z0 / scale)) != null) {
-                returns[0] = new Vector3(floorCorrectly((float) x0 / scale), floorCorrectly((float) y0 / scale), floorCorrectly((float) z0 / scale));
+                if(doRounding) {
+                    returns[0] = new Vector3(floorCorrectly((float) x0 / scale), floorCorrectly((float) y0 / scale), floorCorrectly((float) z0 / scale));
+                }else{
+                    returns[0] = new Vector3((float) x0 / scale, (float) y0 / scale, (float) z0 / scale);
+                }
                 returns[1] = normal;
                 return returns;
             }
@@ -118,13 +124,13 @@ public class Physics { // in relation to center of player
     }
     public static void destroyBlockWhereLooking(){
         try {
-            Vector3 block = calcCols(Game.camera.position, Game.camera.direction, 3.5f)[0];
+            Vector3 block = calcCols(Game.camera.position, Game.camera.direction, 3.5f, true, true, 10)[0];
             Game.crenderer.removeBlock((int) block.x, (int) block.y, (int) block.z);
         }catch(NullPointerException ignored){}
     }
     public static void addBlockWhereLooking(BlockType type){
         try {
-            Vector3[] block = calcCols(Game.camera.position, Game.camera.direction, 3.5f);
+            Vector3[] block = calcCols(Game.camera.position, Game.camera.direction, 3.5f, true, true, 10);
             Block b = new Block((int) (block[0].x + block[1].x), (int) (block[0].y + block[1].y), (int) (block[0].z + block[1].z), type);
             Game.crenderer.addBlock(b);
         }catch(NullPointerException ignored){}
@@ -370,10 +376,10 @@ public class Physics { // in relation to center of player
     public static float intbound(float s, float ds){
         return 1/ds;
     }
-    public static int signum(float x){
-        if(x > 0){
+    public static int signum(float num){
+        if(num > 0){
             return 1;
-        }else if(x < 0){
+        }else if(num < 0){
             return -1;
         }else{
             return 0;

@@ -28,7 +28,8 @@ public class Renderer2D {
         spriteBatch.setProjectionMatrix(camera.combined);
         spriteBatch.begin();
         font.draw(spriteBatch, "+", crosshairoffsetx, crosshairoffsety);
-        font.draw(spriteBatch, "X: " + Game.player.getPos().x + "\nY: " + Game.player.getPos().y + "\nZ: " + Game.player.getPos().z, 0, Gdx.graphics.getHeight());
+        font.draw(spriteBatch, "X: " + Game.player.getPos().x + "\nY: " + Game.player.getPos().y + "\nZ: " + Game.player.getPos().z +
+                "\n Flying: " + Game.player.isFlying, 0, Gdx.graphics.getHeight());
         spriteBatch.end();
     }
 }
