@@ -87,13 +87,13 @@ public class InputHandler implements InputProcessor {
     public boolean keyDown(int keycode) {
         switch(keycode){
             case Input.Keys.R:
-                Game.player.setPos(1f,1f,1f);
+                Game.player.setPos(1f,5f,1f);
                 break;
             case Input.Keys.H:
                 Game.player.isFlying = !Game.player.isFlying;
                 break;
             case Input.Keys.SPACE:
-                Game.player.addVel(0f,0.25f,0f);
+                Game.player.addVel(0f,1f,0f);
                 break;
         }
         return false;

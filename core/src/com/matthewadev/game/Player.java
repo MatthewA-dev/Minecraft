@@ -9,7 +9,7 @@ import java.util.ArrayList;
 public class Player {
     private Vector3 pos;
     private float height = 1.8f;
-    private float width = 1.5f;
+    private float width = 0.8f;
     private Vector3 vel;
     public boolean isFlying = true;
     public boolean isOnGround = false;
@@ -23,21 +23,36 @@ public class Player {
         updateCam();
     }
     public void updatePlayerPos(){
-        if(isColliding() && !Game.player.isFlying){
+/*        if(isColliding() && !Game.player.isFlying){
             this.vel.set(0,0,0);
         }else {
             dealWithColliding();
-/*            this.pos.add(this.vel);
-            updateCam();*/
-        }
+*//*            this.pos.add(this.vel);
+            updateCam();*//*
+        }*/
+        dealWithColliding();
     }
     public void dealWithColliding(){
+        System.out.println("VEL " + vel.y);
         boolean hasCollided = false;
+        boolean shouldBeOnGround = false;
+        float tosetx = pos.x;
+        float tosety = pos.y;
+        float tosetz = pos.z;
+        float tosetvelx = vel.x;
+        float tosetvely = vel.y;
+        float tosetvelz = vel.z;
         for (int addx = -1; addx < 2; addx += 2) {
             for (int addy = -1; addy < 2; addy += 2) {
                 for (int addz = -1; addz < 2; addz += 2) {
                     Vector3 origin = new Vector3(pos.x + (width / 2f) * addx, pos.y + (height) * (addy == -1 ? -1 : 0), pos.z + (width / 2f) * addz);
-                    Vector3[] collision = Physics.calcCols(origin, vel, 0f, false, false, 1000);
+                    Vector3[] collision = Physics.calcCols(origin, vel, 0f, false, false, 100);
+                    if(Physics.calcCols(origin, new Vector3(0f,-0.02f,0f), 0.01f, false, false, 100 ) != null) {
+                        if(Physics.calcCols(origin.cpy().add(vel), new Vector3(0f,-0.02f,0f), 0.01f, false, false, 100 ) != null) {
+                            shouldBeOnGround = true;
+                        }
+                        shouldBeOnGround = true;
+                    }
                     if(collision != null){
                         Vector3 normal = collision[1];
                         /*if(normal.x != 0){
@@ -48,11 +63,13 @@ public class Player {
                         if(normal.y != 0){
                             pos.x = collision[0].x - (width / 2f) * addx;
                             pos.z = collision[0].z - (width / 2f) * addz;
-                            pos.y = collision[0].y - (height) * (addy == -1 ? -1 : 0) + (2f / 1000);
+                            System.out.println("BEFORE: " + pos.y + " " + collision[0].y + " " + origin.y);
+                            pos.y = (float) (collision[0].y + 0.02 + (height) * (addy == 1 ? 0 : 1));
+                            System.out.println(pos.y);
+                            if(addy != 1) {
+                                shouldBeOnGround = true;
+                            }
                             vel.y = 0;
-                            isOnGround = true;
-                        }else{
-                            isOnGround = false;
                         }
                         /*if(normal.z != 0){
                             pos.x = collision[0].x + (width / 2f) * Physics.signum(collision[1].x) + (width / 2f) * collision[1].x;
@@ -60,15 +77,16 @@ public class Player {
                             vel.z = 0;
                         }*/
                         hasCollided = true;
-                    }else{
-                        isOnGround = false;
                     }
                     //cornerCollisions.add(Physics.calcCols(origin, vel, 0f, false));
                 }
             }
         }
+        isOnGround = shouldBeOnGround;
         if(!isFlying && !isOnGround) {
             addVel(0, -1f * Gdx.graphics.getDeltaTime(), 0);
+        }else if(isOnGround){
+            setVelY(0f);
         }
         if(!hasCollided){
             this.pos.add(this.vel);
