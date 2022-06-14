@@ -36,7 +36,6 @@ public class Player {
         //System.out.println("VEL " + vel.y);
         boolean hasCollided = false;
         boolean shouldBeOnGround = false;
-        float tosetvelz = vel.z;
         Vector3 origin = new Vector3(pos.x + (width / 2f), pos.y - (height), pos.z + (width / 2f));
         Vector3[] collision = Physics.calcCols(origin, vel.cpy().scl(Gdx.graphics.getDeltaTime()), 0f, false, false, 100);
         try {
@@ -58,46 +57,6 @@ public class Player {
                 hasCollided = true;
             }
         }catch(NullPointerException e){}
-        /*for (int addx = -1; addx < 2; addx += 2) {
-            for (int addy = -1; addy < 2; addy += 2) {
-                for (int addz = -1; addz < 2; addz += 2) {
-                    Vector3 origin = new Vector3(pos.x + (width / 2f) * addx, pos.y + (height) * (addy == -1 ? -1 : 0), pos.z + (width / 2f) * addz);
-                    Vector3[] collision = Physics.calcCols(origin, vel, 0f, false, false, 100);
-                    if(Physics.calcCols(origin, new Vector3(0f,-0.02f,0f), 0.01f, false, false, 100 ) != null) {
-                        if(Physics.calcCols(origin.cpy().add(vel), new Vector3(0f,-0.02f,0f), 0.01f, false, false, 100 ) != null) {
-                            shouldBeOnGround = true;
-                        }
-                        shouldBeOnGround = true;
-                    }
-                    if(collision != null){
-                        Vector3 normal = collision[1];
-                        *//*if(normal.x != 0){
-                            pos.z = collision[0].z + (width / 2f) * Physics.signum(collision[1].z) + (width / 2f) * collision[1].z;
-                            pos.y = collision[0].y + (height) * Physics.signum(collision[1].y) - (height);
-                            vel.x = 0;
-                        }*//*
-                        if(normal.y != 0){
-                            pos.x = collision[0].x - (width / 2f) * addx;
-                            pos.z = collision[0].z - (width / 2f) * addz;
-                            System.out.println("BEFORE: " + pos.y + " " + collision[0].y + " " + origin.y);
-                            pos.y = (float) (collision[0].y + 0.02 + (height) * (addy == 1 ? 0 : 1));
-                            System.out.println(pos.y);
-                            if(addy != 1) {
-                                shouldBeOnGround = true;
-                            }
-                            vel.y = 0;
-                        }
-                        *//*if(normal.z != 0){
-                            pos.x = collision[0].x + (width / 2f) * Physics.signum(collision[1].x) + (width / 2f) * collision[1].x;
-                            pos.y = collision[0].y + (height) * Physics.signum(collision[1].y) - (height);
-                            vel.z = 0;
-                        }*//*
-                        hasCollided = true;
-                    }
-                    //cornerCollisions.add(Physics.calcCols(origin, vel, 0f, false));
-                }
-            }
-        }*/
         isOnGround = shouldBeOnGround;
         if(!isFlying && !isOnGround) {
             addVel(0, -9.81f * Gdx.graphics.getDeltaTime(), 0);
@@ -115,8 +74,8 @@ public class Player {
             this.vel.z *= 0.9;
             this.vel.y *= 0.8;
         }else{
-            this.vel.x *= 0.8;
-            this.vel.z *= 0.8;
+            this.vel.x *= Math.pow(0.8,60*Gdx.graphics.getDeltaTime());
+            this.vel.z *= Math.pow(0.8,60*Gdx.graphics.getDeltaTime());
         }
         updateCam();
     }
