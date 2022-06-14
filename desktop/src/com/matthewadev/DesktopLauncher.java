@@ -10,7 +10,7 @@ import com.matthewadev.input.InputHandler;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
-		config.setForegroundFPS(61);
+		config.setForegroundFPS(60);
 		config.setWindowedMode(1080, 720);
 		config.setTitle("Minecraft but worse");
 		config.setResizable(false);

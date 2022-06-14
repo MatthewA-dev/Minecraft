@@ -22,8 +22,8 @@ public class InputHandler implements InputProcessor {
         float speed;
         float speedy;
         if(Game.player.isFlying) {
-            speed = 1.2f;
-            speedy = 5f;
+            speed = 25f;
+            speedy = 1000f;
             if (Gdx.input.isKeyPressed(Input.Keys.W)) {
                 Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
             }
@@ -54,8 +54,9 @@ public class InputHandler implements InputProcessor {
                 Game.player.addVel(Game.camera.up.cpy().scl(-speedy * Gdx.graphics.getDeltaTime()));
             }
         }else{
-            speed = 5f;
+            speed = 20f;
             speedy = 6f;
+            Vector3 velback = Game.player.getVel().cpy();
             if (Gdx.input.isKeyPressed(Input.Keys.W)) {
                 Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
             }
@@ -80,6 +81,7 @@ public class InputHandler implements InputProcessor {
                 Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
             }
         }
+
         Game.player.updatePlayerPos();
     }
 
@@ -93,7 +95,9 @@ public class InputHandler implements InputProcessor {
                 Game.player.isFlying = !Game.player.isFlying;
                 break;
             case Input.Keys.SPACE:
-                Game.player.addVel(0f,1f,0f);
+                if(Game.player.isOnGround) {
+                    Game.player.addVel(0f, 5f, 0f);
+                }
                 break;
         }
         return false;

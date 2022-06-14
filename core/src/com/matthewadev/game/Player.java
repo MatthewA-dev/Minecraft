@@ -13,9 +13,9 @@ public class Player {
     private Vector3 vel;
     public boolean isFlying = true;
     public boolean isOnGround = false;
-    private float maxXvel = 5f;
-    private float maxYvel = 2.5f;
-    private float maxZvel = 5f;
+    private float maxXvel = 4f;
+    private float maxYvel = 1000f;
+    private float maxZvel = 4f;
 
     public Player(float x, float y, float z){
         this.pos = new Vector3(x,y,z);
@@ -33,16 +33,32 @@ public class Player {
         dealWithColliding();
     }
     public void dealWithColliding(){
-        System.out.println("VEL " + vel.y);
+        //System.out.println("VEL " + vel.y);
         boolean hasCollided = false;
         boolean shouldBeOnGround = false;
-        float tosetx = pos.x;
-        float tosety = pos.y;
-        float tosetz = pos.z;
-        float tosetvelx = vel.x;
-        float tosetvely = vel.y;
         float tosetvelz = vel.z;
-        for (int addx = -1; addx < 2; addx += 2) {
+        Vector3 origin = new Vector3(pos.x + (width / 2f), pos.y - (height), pos.z + (width / 2f));
+        Vector3[] collision = Physics.calcCols(origin, vel.cpy().scl(Gdx.graphics.getDeltaTime()), 0f, false, false, 100);
+        try {
+            if(Physics.calcCols(origin, new Vector3(0f,-0.02f,0f), 0.01f, false, false, 100 ) != null) {
+                if(Physics.calcCols(origin.cpy().add(vel.cpy().scl(Gdx.graphics.getDeltaTime())), new Vector3(0f,-0.02f,0f), 0.01f, false, false, 100 ) == null) {
+                    shouldBeOnGround = false;
+                }else {
+                    shouldBeOnGround = true;
+                }
+            }
+            if (collision[1].y != 0) {
+                pos.x = collision[0].x - (width / 2f);
+                pos.z = collision[0].z - (width / 2f);
+                //System.out.println("BEFORE: " + pos.y + " " + collision[0].y + " " + origin.y);
+                pos.y = (float) (collision[0].y + 0.02 + (height));
+               // System.out.println(pos.y);
+                shouldBeOnGround = true;
+                vel.y = 0;
+                hasCollided = true;
+            }
+        }catch(NullPointerException e){}
+        /*for (int addx = -1; addx < 2; addx += 2) {
             for (int addy = -1; addy < 2; addy += 2) {
                 for (int addz = -1; addz < 2; addz += 2) {
                     Vector3 origin = new Vector3(pos.x + (width / 2f) * addx, pos.y + (height) * (addy == -1 ? -1 : 0), pos.z + (width / 2f) * addz);
@@ -55,11 +71,11 @@ public class Player {
                     }
                     if(collision != null){
                         Vector3 normal = collision[1];
-                        /*if(normal.x != 0){
+                        *//*if(normal.x != 0){
                             pos.z = collision[0].z + (width / 2f) * Physics.signum(collision[1].z) + (width / 2f) * collision[1].z;
                             pos.y = collision[0].y + (height) * Physics.signum(collision[1].y) - (height);
                             vel.x = 0;
-                        }*/
+                        }*//*
                         if(normal.y != 0){
                             pos.x = collision[0].x - (width / 2f) * addx;
                             pos.z = collision[0].z - (width / 2f) * addz;
@@ -71,33 +87,36 @@ public class Player {
                             }
                             vel.y = 0;
                         }
-                        /*if(normal.z != 0){
+                        *//*if(normal.z != 0){
                             pos.x = collision[0].x + (width / 2f) * Physics.signum(collision[1].x) + (width / 2f) * collision[1].x;
                             pos.y = collision[0].y + (height) * Physics.signum(collision[1].y) - (height);
                             vel.z = 0;
-                        }*/
+                        }*//*
                         hasCollided = true;
                     }
                     //cornerCollisions.add(Physics.calcCols(origin, vel, 0f, false));
                 }
             }
-        }
+        }*/
         isOnGround = shouldBeOnGround;
         if(!isFlying && !isOnGround) {
-            addVel(0, -1f * Gdx.graphics.getDeltaTime(), 0);
+            addVel(0, -9.81f * Gdx.graphics.getDeltaTime(), 0);
         }else if(isOnGround){
             setVelY(0f);
         }
         if(!hasCollided){
-            this.pos.add(this.vel);
+            Vector3 v = this.vel.cpy().scl(Gdx.graphics.getDeltaTime());
+            v.x *= 3;
+            v.z *= 3;
+            this.pos.add(v);
         }
         if(isFlying) {
             this.vel.x *= 0.9;
             this.vel.z *= 0.9;
-            this.vel.y *= 0.5;
+            this.vel.y *= 0.8;
         }else{
-            this.vel.x *= 0.5;
-            this.vel.z *= 0.5;
+            this.vel.x *= 0.8;
+            this.vel.z *= 0.8;
         }
         updateCam();
     }
@@ -128,26 +147,41 @@ public class Player {
     }
     public void addVel(Vector3 vel){
         this.vel.add(vel);
-        if(vel.x > maxXvel){
-            vel.x = maxXvel;
-        }else if(vel.x < -maxXvel){
-            vel.x = -maxXvel;
+        if(this.vel.x > maxXvel){
+            this.vel.x = maxXvel;
+        }else if(this.vel.x < -maxXvel){
+            this.vel.x = -maxXvel;
         }
-        if(vel.y > maxYvel){
-            vel.y = maxYvel;
-        }else if(vel.y < -maxYvel){
-            vel.y = -maxYvel;
+        if(this.vel.y > maxYvel){
+            this.vel.y = maxYvel;
+        }else if(this.vel.y < -maxYvel){
+            this.vel.y = -maxYvel;
         }
-        if(vel.z > maxZvel){
-            vel.z = maxZvel;
-        }else if(vel.z < -maxZvel){
-            vel.z = -maxZvel;
+        if(this.vel.z > maxZvel){
+            this.vel.z = maxZvel;
+        }else if(this.vel.z < -maxZvel){
+            this.vel.z = -maxZvel;
         }
     }
     public void addVel(float x, float y, float z){
         this.vel.x += x;
         this.vel.y += y;
         this.vel.z += z;
+        if(this.vel.x > maxXvel){
+            this.vel.x = maxXvel;
+        }else if(this.vel.x < -maxXvel){
+            this.vel.x = -maxXvel;
+        }
+        if(this.vel.y > maxYvel){
+            this.vel.y = maxYvel;
+        }else if(this.vel.y < -maxYvel){
+            this.vel.y = -maxYvel;
+        }
+        if(this.vel.z > maxZvel){
+            this.vel.z = maxZvel;
+        }else if(this.vel.z < -maxZvel){
+            this.vel.z = -maxZvel;
+        }
     }
     public void updateCam(){
         Game.camera.position.set(this.pos);
