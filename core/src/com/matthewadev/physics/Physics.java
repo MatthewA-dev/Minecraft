@@ -1,5 +1,6 @@
 package com.matthewadev.physics;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.matthewadev.game.Game;
 import com.matthewadev.render.Block;
@@ -132,6 +133,24 @@ public class Physics {
         try {
             Vector3[] block = calcCols(Game.camera.position, Game.camera.direction, 3.5f, true, true, 10);
             Block b = new Block((int) (block[0].x + block[1].x), (int) (block[0].y + block[1].y), (int) (block[0].z + block[1].z), type);
+            //System.out.println(b.getX() + " " + b.getY() + " " + b.getZ());
+            // check if your inside block
+            for (int addx = -1; addx < 2; addx += 2) {
+                for(int addy = 0; addy < 2; addy += 1){
+                    for (int addz = -1; addz < 2; addz += 2) {
+/*                        System.out.println(floorCorrectly(Game.player.getPos().x + (Game.player.width / 2f) * addx) + " " +
+                                floorCorrectly(Game.player.getPos().y + (Game.player.height) * addy) + " " +
+                                floorCorrectly(Game.player.getPos().z + (Game.player.width / 2f) * addz));*/
+                        if (floorCorrectly(Game.player.getPos().x + (Game.player.width / 2f) * addx) == block[0].x + block[1].x) {
+                            if (floorCorrectly(Game.player.getPos().y - (Game.player.height) * addy) == block[0].y + block[1].y)  {
+                                if(floorCorrectly(Game.player.getPos().z + (Game.player.width / 2f) * addz) == block[0].z + block[1].z) {
+                                    return;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             Game.crenderer.addBlock(b);
         }catch(NullPointerException ignored){}
     }
