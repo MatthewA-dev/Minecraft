@@ -42,22 +42,26 @@ public class Player {
         v.x *= 3;
         v.z *= 3;
         for (int addx = -1; addx < 2; addx += 2) {
-            for (float addy = 0; addy <= 1; addy += 0.5) {
+            for (float addy = 0; addy <= 1; addy += 1) {
                 for (int addz = -1; addz < 2; addz += 2) {
                     origin = new Vector3(pos.x + (width / 2f) * addx, pos.y - (height) * addy, pos.z + (width / 2f) * addz);
-                    if (Physics.calcCols(origin, new Vector3(0f, -0.02f, 0f), 0.01f, false, false, 100) != null) {
-                        if (Physics.calcCols(origin.cpy().add(v), new Vector3(0f, -0.02f, 0f), 0.01f, false, false, 100) != null) {
-                            shouldBeOnGround = true;
+                    if(addy == 1) {
+                        if (Physics.calcCols(origin, new Vector3(0f, -0.02f, 0f), 0.01f, false, false, 100) != null) {
+                            if (Physics.calcCols(origin.cpy().add(v), new Vector3(0f, -0.02f, 0f), 0.01f, false, false, 100) != null) {
+                                shouldBeOnGround = true;
+                            }
                         }
                     }
                     Vector3[] collision = Physics.calcCols(origin, v, 0f, false, false, 100);
                     try {
-                        System.out.println(collision[0]);
+                        /*if(origin.y < 1f) {
+                            System.out.println(origin);
+                        }*/
                         // managing collisions
                         if (collision[1].x != 0) {
                             pos.x = (collision[0].x + 0.01f * collision[1].x) - ((width / 2f) * (addx));
                             pos.y = collision[0].y + height * addy;
-                            pos.z = collision[0].z - (width / 2f) * (addz);
+                            pos.z = collision[0].z + (width / 2f) * (addz);
                             vel.x = 0;
                         }
                         if (collision[1].y != 0) {
@@ -70,7 +74,7 @@ public class Player {
                             vel.y = 0;
                         }
                         if (collision[1].z != 0) {
-                            pos.x = collision[0].x - ((width / 2f) * (addx));
+                            pos.x = collision[0].x + ((width / 2f) * (addx));
                             pos.y = collision[0].y + height * addy;
                             pos.z = (collision[0].z + 0.01f * collision[1].z) - (width / 2f) * (addz);
                             vel.z = 0;
@@ -95,14 +99,19 @@ public class Player {
             this.vel.z *= 0.9;
             this.vel.y *= 0.8;
         }else{
-/*            this.vel.x *= Math.pow(0.8,60*Gdx.graphics.getDeltaTime());
-            this.vel.z *= Math.pow(0.8,60*Gdx.graphics.getDeltaTime());*/
+            this.vel.x *= Math.pow(0.8,60*Gdx.graphics.getDeltaTime());
+            this.vel.z *= Math.pow(0.8,60*Gdx.graphics.getDeltaTime());
         }
 
         Vector3 v = this.vel.cpy().scl(Gdx.graphics.getDeltaTime());
         v.x *= 3;
         v.z *= 3;
+        boolean d = isColliding();
+        //System.out.println("FIRST: " + isColliding());
         this.pos.add(v);
+        if(isColliding()){
+            this.pos.sub(v);
+        }
 /*        if(isColliding()){
             this.pos.sub(v);
         }*/
@@ -150,7 +159,6 @@ public class Player {
         }else if(this.vel.z < -maxZvel){
             this.vel.z = -maxZvel;
         }
-        manageVelocities();
     }
     public void addVel(float x, float y, float z){
         this.vel.x += x;
@@ -171,7 +179,6 @@ public class Player {
         }else if(this.vel.z < -maxZvel){
             this.vel.z = -maxZvel;
         }
-        manageVelocities();
     }
     public void updateCam(){
         Game.camera.position.set(this.pos);

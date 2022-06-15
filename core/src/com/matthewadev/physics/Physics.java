@@ -113,11 +113,18 @@ public class Physics {
                     floorCorrectly((float) y0 / scale),
                     floorCorrectly((float) z0 / scale)) != null) {
                 if(doRounding) {
-                    returns[0] = new Vector3(floorCorrectly((float) x0 / scale), floorCorrectly((float) y0 / scale), floorCorrectly((float) z0 / scale));
+                    returns[0] = new Vector3(floorCorrectly((float) (x0) / scale),
+                            floorCorrectly((float) (y0) / scale),
+                            floorCorrectly((float) (z0) / scale));
                 }else{
-                    returns[0] = new Vector3(((float) x0) / scale, ((float) y0) / scale, ((float) z0) / scale);
+                    returns[0] = new Vector3(((float) x0/* + normal.x*/) / scale,
+                            ((float) y0 /*+ normal.y*/) / scale,
+                            ((float) z0 /*+ normal.z*/) / scale);
                 }
                 returns[1] = normal;
+                if(normal.y == 0) {
+                    //System.out.println(returns[0] + " " + start + " " + direction + " " + normal);
+                }
                 return returns;
             }
         }
