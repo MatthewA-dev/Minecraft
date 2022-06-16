@@ -50,6 +50,8 @@ public class Game {
         for (int i = 0; i < 32; i++) {
             crenderer.addBlock(new Block(0,0,i,BlockType.CRAFTING_TABLE));
         }
+        crenderer.addBlock(new Block(1,1,0,BlockType.STONE));
+        crenderer.addBlock(new Block(1,2,0,BlockType.STONE));
         crenderer.handleChunkDistances();
     }
     public static void runFrame(){

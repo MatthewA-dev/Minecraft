@@ -1,13 +1,11 @@
 package com.matthewadev.physics;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.matthewadev.game.Game;
 import com.matthewadev.render.Block;
 import com.matthewadev.render.BlockType;
 
 import static java.lang.Math.abs;
-import static java.lang.Math.pow;
 
 public class Physics {
     float x1;
@@ -24,6 +22,9 @@ public class Physics {
         this.x2 = x2;
         this.y2 = y2;
         this.z2 = z2;
+    }
+    public static float distanceTo(Vector3 p1, Vector3 p2) {
+        return (float) Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2) + Math.pow(p1.z - p2.z, 2));
     }
     // https://stackoverflow.com/a/55277311/14969155
     // https://www.gamedev.net/blogs/entry/2265248-voxel-traversal-algorithm-ray-casting/
@@ -50,6 +51,29 @@ public class Physics {
         double tDeltaZ = mag / dz;
         Vector3 normal = new Vector3(0f,0f,0f);
         while (x0 != x1 || y0 != y1 || z0 != z1) {
+            if(tMaxX < tMaxY) {
+                if(tMaxZ < tMaxX) { // z smallest
+                    normal.set(0f, 0, -stepZ);
+                    z0 = z0 + stepZ;
+                    tMaxZ = tMaxZ + tDeltaZ;
+                } else { // x smallest
+                    normal.set(-stepX, 0, 0);
+                    x0 = x0 + stepX;
+                    tMaxX = tMaxX + tDeltaX;
+                }
+            } else {
+                if(tMaxY < tMaxZ) { // y smallest
+                    normal.set(0f, -stepY, 0);
+                    y0 = y0 + stepY;
+                    tMaxY = tMaxY + tDeltaY;
+                } else { // z smallest
+                    normal.set(0f, 0, -stepZ);
+                    z0 = z0 + stepZ;
+                    tMaxZ = tMaxZ + tDeltaZ;
+                }
+            }
+            //System.out.println(x0 + " " + y0 + " " + z0 + " | "  + floorCorrectly((float) (x0) / scale) + " " + floorCorrectly((float) y0 / scale) + " " + floorCorrectly((float) z0 / scale) + " | " + normal);
+/*            System.out.println(tMaxX + " " + tMaxY + " " + tMaxZ + " | " + x0 + " " + y0 + " " + z0);
             if (tMaxX < tMaxY) {
                 if (tMaxX < tMaxZ) {
                     normal.set(-stepX, 0, 0);
@@ -104,7 +128,7 @@ public class Physics {
                     tMaxZ = tMaxZ + tDeltaZ;
 
                 }
-            }
+            }*/
 /*            System.out.println(floorCorrectly((float) x0 / scale) + " " +
                     floorCorrectly((float) y0 / scale) + " " +
                     floorCorrectly((float) z0 / scale));*/

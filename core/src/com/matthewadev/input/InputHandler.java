@@ -89,7 +89,7 @@ public class InputHandler implements InputProcessor {
     public boolean keyDown(int keycode) {
         switch(keycode){
             case Input.Keys.R:
-                Game.player.setPos(1f,5f,1f);
+                Game.player.setPos(0f,2.8f,0.5f);
                 break;
             case Input.Keys.H:
                 Game.player.isFlying = !Game.player.isFlying;
@@ -98,6 +98,21 @@ public class InputHandler implements InputProcessor {
                 if(Game.player.isOnGround) {
                     Game.player.addVel(0f, 5f, 0f);
                 }
+                break;
+            case Input.Keys.Y:
+                Game.camera.direction.set(1f,0f,0f);
+                break;
+            case Input.Keys.U:
+                Game.camera.direction.set(-1f,0f,0f);
+                break;
+            case Input.Keys.I:
+                Game.camera.direction.set(0f,0f,1f);
+                break;
+            case Input.Keys.O:
+                Game.camera.direction.set(0f,0f,-1f);
+                break;
+            case Input.Keys.P:
+                Game.camera.direction.set(.5f,0f,.5f);
                 break;
         }
         return false;
