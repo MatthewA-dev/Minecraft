@@ -8,6 +8,8 @@ import com.badlogic.gdx.math.Vector3;
 import com.matthewadev.game.Game;
 import com.matthewadev.physics.Physics;
 import com.matthewadev.render.BlockType;
+import com.matthewadev.render.UI.Screen;
+import com.matthewadev.render.UI.UIManager;
 
 // Continuous input handler (e.g. moving the player)
 public class InputHandler implements InputProcessor {
@@ -130,12 +132,19 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if(button == 0){
-            Physics.destroyBlockWhereLooking();
-        } else if (button == 1) {
-            Physics.addBlockWhereLooking(BlockType.CRAFTING_TABLE);
+        if(UIManager.currentScreen == Screen.GAME) {
+            if (button == 0) {
+                Physics.destroyBlockWhereLooking();
+            } else if (button == 1) {
+                Physics.addBlockWhereLooking(BlockType.CRAFTING_TABLE);
+            }
+            Game.camera.update();
+        }else if(UIManager.currentScreen == Screen.MAIN_MENU){
+            if(UIManager.b.isInside(screenX, screenY)){
+                UIManager.currentScreen = Screen.GAME;
+                Gdx.input.setCursorCatched(true);
+            }
         }
-        Game.camera.update();
         //Physics.getClosestIntersection(Game.camera.direction, Game.player.getPos().cpy());
         return false;
     }
@@ -153,13 +162,15 @@ public class InputHandler implements InputProcessor {
 
     @Override
     public boolean mouseMoved(int screenX, int screenY) { // Adapted from the libgdx FirstPersonCamera controller code
-        float angleX = (Gdx.graphics.getWidth() / 2 - screenX) * degreesPerPixel;
-        float angleY = (Gdx.graphics.getHeight() / 2 - screenY)  * degreesPerPixel;
-        Game.camera.direction.rotate(Game.camera.up, angleX);
-        tmp.set(Game.camera.direction).crs(Game.camera.up).nor();
-        Game.camera.direction.rotate(tmp, angleY);
-        Game.camera.update();
-        Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2,Gdx.graphics.getHeight() / 2);
+        if(UIManager.currentScreen == Screen.GAME) {
+            float angleX = (Gdx.graphics.getWidth() / 2 - screenX) * degreesPerPixel;
+            float angleY = (Gdx.graphics.getHeight() / 2 - screenY) * degreesPerPixel;
+            Game.camera.direction.rotate(Game.camera.up, angleX);
+            tmp.set(Game.camera.direction).crs(Game.camera.up).nor();
+            Game.camera.direction.rotate(tmp, angleY);
+            Game.camera.update();
+            Gdx.input.setCursorPosition(Gdx.graphics.getWidth() / 2, Gdx.graphics.getHeight() / 2);
+        }
         return true;
     }
 

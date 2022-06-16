@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
 import com.matthewadev.input.InputHandler;
 import com.matthewadev.physics.PhysicsManager;
 import com.matthewadev.render.*;
+import com.matthewadev.render.UI.UIManager;
 
 public class Game {
     public static Player player;
@@ -36,7 +37,6 @@ public class Game {
         crenderer = new ChunkManager();
         inputHandler = new InputHandler();
         Gdx.input.setInputProcessor(inputHandler);
-        Gdx.input.setCursorCatched(true);
         // lighting
         env = new Environment();
         env.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
@@ -55,11 +55,7 @@ public class Game {
         crenderer.handleChunkDistances();
     }
     public static void runFrame(){
-        render();
-        Renderer2D.render();
-        inputHandler.handleInput();
-        timeSince += Gdx.graphics.getDeltaTime();
-        runTick();
+        UIManager.render();
     }
     public static void runTick(){
         if(timeSince < 1f / 20){
