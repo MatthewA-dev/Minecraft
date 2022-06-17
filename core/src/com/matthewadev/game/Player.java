@@ -230,7 +230,7 @@ public class Player {
         v.x *= 3;
         v.z *= 3;
         for (int addx = -1; addx < 2; addx += 2) {
-            for (float addy = 0; addy <= 1; addy += 1) {
+            for (float addy = 0; addy <= 1; addy += 0.5) {
                 for (int addz = -1; addz < 2; addz += 2) {
                     Vector3 origin = new Vector3(pos.x + (width / 2f) * addx, pos.y - (height) * addy, pos.z + (width / 2f) * addz);
                     Vector3[] collision = Physics.calcCols(origin, v, 0f, false, false, 100);

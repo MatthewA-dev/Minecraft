@@ -25,6 +25,7 @@ public class Game {
     public static void init(){
         PhysicsManager.init();
         Renderer2D.init();
+        UIManager.init();
         camera = new PerspectiveCamera(90, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         //camera.position.set(1f, 1f, 1f);
         camera.near = 0.01f;

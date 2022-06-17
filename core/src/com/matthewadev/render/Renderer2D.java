@@ -5,11 +5,13 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.matthewadev.game.Game;
+import com.matthewadev.render.UI.UIManager;
 
 public class Renderer2D {
-    private static OrthographicCamera camera;
-    private static SpriteBatch spriteBatch;
+    public static OrthographicCamera camera;
+    public static SpriteBatch spriteBatch;
     private static BitmapFont font;
     private static float crosshairoffsetx;
     private static float crosshairoffsety;

@@ -8,7 +8,9 @@ import com.badlogic.gdx.math.Vector3;
 import com.matthewadev.game.Game;
 import com.matthewadev.physics.Physics;
 import com.matthewadev.render.BlockType;
+import com.matthewadev.render.UI.Button;
 import com.matthewadev.render.UI.Screen;
+import com.matthewadev.render.UI.UIElement;
 import com.matthewadev.render.UI.UIManager;
 
 // Continuous input handler (e.g. moving the player)
@@ -140,9 +142,13 @@ public class InputHandler implements InputProcessor {
             }
             Game.camera.update();
         }else if(UIManager.currentScreen == Screen.MAIN_MENU){
-            if(UIManager.b.isInside(screenX, screenY)){
-                UIManager.currentScreen = Screen.GAME;
-                Gdx.input.setCursorCatched(true);
+            for (UIElement e: UIManager.mainMenuItems) {
+                if(e instanceof Button){
+                    Button eb = (Button) e;
+                    if(eb.isInside(screenX, screenY)){
+                        eb.func.run();
+                    }
+                }
             }
         }
         //Physics.getClosestIntersection(Game.camera.direction, Game.player.getPos().cpy());
