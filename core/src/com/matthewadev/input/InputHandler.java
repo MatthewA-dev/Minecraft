@@ -118,6 +118,15 @@ public class InputHandler implements InputProcessor {
             case Input.Keys.P:
                 Game.camera.direction.set(.5f,0f,.5f);
                 break;
+            case Input.Keys.ESCAPE:
+                if(UIManager.currentScreen == Screen.GAME){
+                    UIManager.currentScreen = Screen.PAUSED;
+                    Gdx.input.setCursorCatched(false);
+                }else if(UIManager.currentScreen == Screen.PAUSED){
+                    UIManager.currentScreen = Screen.GAME;
+                    Gdx.input.setCursorCatched(true);
+                }
+                break;
         }
         return false;
     }
@@ -146,6 +155,24 @@ public class InputHandler implements InputProcessor {
                 if(e instanceof Button){
                     Button eb = (Button) e;
                     if(eb.isInside(screenX, screenY)){
+                        eb.func.run();
+                    }
+                }
+            }
+        }else if(UIManager.currentScreen == Screen.PAUSED){
+            for (UIElement e: UIManager.pausedItems) {
+                if(e instanceof Button){
+                    Button eb = (Button) e;
+                    if(eb.isInside(screenX, screenY)){
+                        eb.func.run();
+                    }
+                }
+            }
+        }else if(UIManager.currentScreen == Screen.CONTROL_MENU) {
+            for (UIElement e : UIManager.controlItems) {
+                if (e instanceof Button) {
+                    Button eb = (Button) e;
+                    if (eb.isInside(screenX, screenY)) {
                         eb.func.run();
                     }
                 }
