@@ -8,10 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.matthewadev.game.Game;
 import com.matthewadev.physics.Physics;
 import com.matthewadev.render.BlockType;
-import com.matthewadev.render.UI.Button;
-import com.matthewadev.render.UI.Screen;
-import com.matthewadev.render.UI.UIElement;
-import com.matthewadev.render.UI.UIManager;
+import com.matthewadev.render.UI.*;
 
 // Continuous input handler (e.g. moving the player)
 public class InputHandler implements InputProcessor {
@@ -25,108 +22,121 @@ public class InputHandler implements InputProcessor {
         // forward and backward movement
         float speed;
         float speedy;
-        if(Game.player.isFlying) {
-            speed = 25f;
-            speedy = 1000f;
-            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+        if(UIManager.currentScreen == Screen.GAME) {
+            if (Game.player.isFlying) {
+                speed = 25f;
+                speedy = 75f;
+                if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+                    Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+                }
+                if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+                    dir.x = -dir.x;
+                    dir.z = -dir.z;
+                    Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+                    //Game.player.setPos(Game.player.getPos().cpy().sub(Game.camera.direction.cpy().scl(mult * 2f * Gdx.graphics.getDeltaTime())));
+                }
+                if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+                    dir = Game.camera.up.cpy().crs(Game.camera.direction);
+                    dir.y = 0;
+                    dir = dir.nor();
+                    Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+                }
+                if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                    dir = Game.camera.up.cpy().crs(Game.camera.direction);
+                    dir.y = 0;
+                    dir = dir.nor();
+                    dir.x = -dir.x;
+                    dir.z = -dir.z;
+                    Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+                }
+                if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+                    Game.player.addVel(Game.camera.up.cpy().scl(speedy * Gdx.graphics.getDeltaTime()));
+                }
+                if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+                    Game.player.addVel(Game.camera.up.cpy().scl(-speedy * Gdx.graphics.getDeltaTime()));
+                }
+            } else {
+                speed = 20f;
+                if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+                    Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+                }
+                if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+                    dir.x = -dir.x;
+                    dir.z = -dir.z;
+                    Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+                    //Game.player.setPos(Game.player.getPos().cpy().sub(Game.camera.direction.cpy().scl(mult * 2f * Gdx.graphics.getDeltaTime())));
+                }
+                if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+                    dir = Game.camera.up.cpy().crs(Game.camera.direction);
+                    dir.y = 0;
+                    dir = dir.nor();
+                    Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+                }
+                if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                    dir = Game.camera.up.cpy().crs(Game.camera.direction);
+                    dir.y = 0;
+                    dir = dir.nor();
+                    dir.x = -dir.x;
+                    dir.z = -dir.z;
+                    Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
+                }
             }
-            if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                dir.x = -dir.x;
-                dir.z = -dir.z;
-                Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
-                //Game.player.setPos(Game.player.getPos().cpy().sub(Game.camera.direction.cpy().scl(mult * 2f * Gdx.graphics.getDeltaTime())));
-            }
-            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                dir = Game.camera.up.cpy().crs(Game.camera.direction);
-                dir.y = 0;
-                dir = dir.nor();
-                Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
-            }
-            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                dir = Game.camera.up.cpy().crs(Game.camera.direction);
-                dir.y = 0;
-                dir = dir.nor();
-                dir.x = -dir.x;
-                dir.z = -dir.z;
-                Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
-            }
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-                Game.player.addVel(Game.camera.up.cpy().scl(speedy * Gdx.graphics.getDeltaTime()));
-            }
-            if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
-                Game.player.addVel(Game.camera.up.cpy().scl(-speedy * Gdx.graphics.getDeltaTime()));
-            }
-        }else{
-            speed = 20f;
-            speedy = 6f;
-            Vector3 velback = Game.player.getVel().cpy();
-            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
-            }
-            if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                dir.x = -dir.x;
-                dir.z = -dir.z;
-                Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
-                //Game.player.setPos(Game.player.getPos().cpy().sub(Game.camera.direction.cpy().scl(mult * 2f * Gdx.graphics.getDeltaTime())));
-            }
-            if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                dir = Game.camera.up.cpy().crs(Game.camera.direction);
-                dir.y = 0;
-                dir = dir.nor();
-                Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
-            }
-            if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                dir = Game.camera.up.cpy().crs(Game.camera.direction);
-                dir.y = 0;
-                dir = dir.nor();
-                dir.x = -dir.x;
-                dir.z = -dir.z;
-                Game.player.addVel(dir.scl(speed * Gdx.graphics.getDeltaTime()));
-            }
-        }
 
-        Game.player.updatePlayerPos();
+            Game.player.updatePlayerPos();
+        }
     }
 
     @Override
     public boolean keyDown(int keycode) {
-        switch(keycode){
-            case Input.Keys.R:
-                Game.player.setPos(0f,2.8f,0.5f);
-                break;
-            case Input.Keys.H:
-                Game.player.isFlying = !Game.player.isFlying;
-                break;
-            case Input.Keys.SPACE:
-                if(Game.player.isOnGround) {
-                    Game.player.addVel(0f, 5f, 0f);
-                }
-                break;
-            case Input.Keys.Y:
-                Game.camera.direction.set(1f,0f,0f);
-                break;
-            case Input.Keys.U:
-                Game.camera.direction.set(-1f,0f,0f);
-                break;
-            case Input.Keys.I:
-                Game.camera.direction.set(0f,0f,1f);
-                break;
-            case Input.Keys.O:
-                Game.camera.direction.set(0f,0f,-1f);
-                break;
-            case Input.Keys.P:
-                Game.camera.direction.set(.5f,0f,.5f);
-                break;
-            case Input.Keys.ESCAPE:
-                if(UIManager.currentScreen == Screen.GAME){
+        if(UIManager.currentScreen == Screen.GAME) {
+            switch (keycode) {
+                case Input.Keys.R:
+                    Game.player.setPos(0f, 2.8f, 0.5f);
+                    break;
+                case Input.Keys.H:
+                    Game.player.isFlying = !Game.player.isFlying;
+                    break;
+                case Input.Keys.SPACE:
+                    if (Game.player.isOnGround) {
+                        Game.player.addVel(0f, 5f, 0f);
+                    }
+                    break;
+                case Input.Keys.Y:
+                    Game.camera.direction.set(1f, 0f, 0f);
+                    break;
+                case Input.Keys.U:
+                    Game.camera.direction.set(-1f, 0f, 0f);
+                    break;
+                case Input.Keys.I:
+                    Game.camera.direction.set(0f, 0f, 1f);
+                    break;
+                case Input.Keys.O:
+                    Game.camera.direction.set(0f, 0f, -1f);
+                    break;
+                case Input.Keys.P:
+                    Game.camera.direction.set(.5f, 0f, .5f);
+                    break;
+                case Input.Keys.ESCAPE:
                     UIManager.currentScreen = Screen.PAUSED;
                     Gdx.input.setCursorCatched(false);
-                }else if(UIManager.currentScreen == Screen.PAUSED){
+                    break;
+                case Input.Keys.E:
+                    UIManager.currentScreen = Screen.INVENTORY;
+                    Gdx.input.setCursorCatched(false);
+                    break;
+            }
+        }else{
+            if(keycode == Input.Keys.ESCAPE) {
+                if (UIManager.currentScreen == Screen.PAUSED) {
                     UIManager.currentScreen = Screen.GAME;
                     Gdx.input.setCursorCatched(true);
                 }
-                break;
+            }else if(keycode == Input.Keys.E){
+                if(UIManager.currentScreen == Screen.INVENTORY) {
+                    UIManager.currentScreen = Screen.GAME;
+                    Gdx.input.setCursorCatched(true);
+                }
+            }
         }
         return false;
     }
@@ -147,7 +157,7 @@ public class InputHandler implements InputProcessor {
             if (button == 0) {
                 Physics.destroyBlockWhereLooking();
             } else if (button == 1) {
-                Physics.addBlockWhereLooking(BlockType.CRAFTING_TABLE);
+                Physics.addBlockWhereLooking(Game.player.selectedBlock);
             }
             Game.camera.update();
         }else if(UIManager.currentScreen == Screen.MAIN_MENU){
@@ -175,6 +185,17 @@ public class InputHandler implements InputProcessor {
                     if (eb.isInside(screenX, screenY)) {
                         eb.func.run();
                     }
+                }
+            }
+        }else if(UIManager.currentScreen == Screen.INVENTORY) {
+            for (UIElement e : UIManager.inventoryItems) {
+                if (e instanceof Icon) {
+                    Icon eb = (Icon) e;
+                    if (eb.isInside(screenX, screenY)) {
+                        Game.player.selectedBlock = eb.b;
+                    }
+                }else{
+                    e.text = "Selected Block: " + Game.player.selectedBlock.name().toLowerCase().replace("_", " ");
                 }
             }
         }

@@ -1,7 +1,9 @@
 package com.matthewadev.physics;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.matthewadev.game.Game;
+import com.matthewadev.game.Player;
 import com.matthewadev.render.Block;
 import com.matthewadev.render.BlockType;
 
@@ -166,12 +168,12 @@ public class Physics {
             Block b = new Block((int) (block[0].x + block[1].x), (int) (block[0].y + block[1].y), (int) (block[0].z + block[1].z), type);
             //System.out.println(b.getX() + " " + b.getY() + " " + b.getZ());
             // check if your inside block
-            for (int addx = -1; addx < 2; addx += 2) {
+            /*for (int addx = -1; addx < 2; addx += 2) {
                 for(int addy = 0; addy < 2; addy += 1){
                     for (int addz = -1; addz < 2; addz += 2) {
-/*                        System.out.println(floorCorrectly(Game.player.getPos().x + (Game.player.width / 2f) * addx) + " " +
+*//*                        System.out.println(floorCorrectly(Game.player.getPos().x + (Game.player.width / 2f) * addx) + " " +
                                 floorCorrectly(Game.player.getPos().y + (Game.player.height) * addy) + " " +
-                                floorCorrectly(Game.player.getPos().z + (Game.player.width / 2f) * addz));*/
+                                floorCorrectly(Game.player.getPos().z + (Game.player.width / 2f) * addz));*//*
                         if (floorCorrectly(Game.player.getPos().x + (Game.player.width / 2f) * addx) == block[0].x + block[1].x) {
                             if (floorCorrectly(Game.player.getPos().y - (Game.player.height) * addy) == block[0].y + block[1].y)  {
                                 if(floorCorrectly(Game.player.getPos().z + (Game.player.width / 2f) * addz) == block[0].z + block[1].z) {
@@ -181,8 +183,17 @@ public class Physics {
                         }
                     }
                 }
-            }
+            }*/
             Game.crenderer.addBlock(b);
+            Vector3 vel = Game.player.getVel().cpy().scl(Gdx.graphics.getDeltaTime());
+            vel.x *= 3;
+            vel.z *= 3;
+            Vector3 pos = Game.player.getPos().cpy().add(vel);
+            if(Game.player.isColliding(Game.player.getPos().x, Game.player.getPos().y, Game.player.getPos().z)){
+                Game.crenderer.removeBlock(b);
+            }else if(Game.player.isColliding(pos.x, pos.y, pos.z)){
+                Game.crenderer.removeBlock(b);
+            }
         }catch(NullPointerException ignored){}
     }
 /*    public void calculatePossibleCollisions(float originx, float originy, float originz){

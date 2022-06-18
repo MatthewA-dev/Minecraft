@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.matthewadev.physics.Physics;
+import com.matthewadev.render.BlockType;
 
 public class Player {
     private Vector3 pos;
@@ -14,6 +15,7 @@ public class Player {
     public boolean isOnGround = false;
     private float maxHorVel = 4f;
     private float maxYvel = 1000f;
+    public BlockType selectedBlock = BlockType.STONE;
 
     public Player(float x, float y, float z){
         this.pos = new Vector3(x,y,z);
@@ -34,16 +36,12 @@ public class Player {
         v.z *= 3;
         this.isOnGround = false;
         for (int addx = -1; addx < 2; addx += 2) {
-            for (float addy = 0; addy <= 1; addy += 1) {
-                for (int addz = -1; addz < 2; addz += 2) {
-                    Vector3 origin = new Vector3(pos.x + (width / 2f) * addx, pos.y - (height) * addy, pos.z + (width / 2f) * addz);
-                    //System.out.println(origin);
-                    if (addy == 1) {
-                        if (Physics.calcCols(origin, new Vector3(0f, -0.02f, 0f), 0.01f, false, false, 100) != null) {
-                            if (Physics.calcCols(origin.cpy().add(v), new Vector3(0f, -0.02f, 0f), 0.01f, false, false, 100) != null) {
-                                this.isOnGround = true;
-                            }
-                        }
+            for (int addz = -1; addz < 2; addz += 2) {
+                Vector3 origin = new Vector3(pos.x + (width / 2f) * addx, pos.y - (height), pos.z + (width / 2f) * addz);
+                //System.out.println(origin);
+                if (Physics.calcCols(origin, new Vector3(0f, -0.02f, 0f), 0.01f, false, false, 100) != null) {
+                    if (Physics.calcCols(origin.cpy().add(v), new Vector3(0f, -0.02f, 0f), 0.01f, false, false, 100) != null) {
+                        this.isOnGround = true;
                     }
                 }
             }
@@ -157,7 +155,6 @@ public class Player {
         Vector3 v = this.vel.cpy().scl(Gdx.graphics.getDeltaTime());
         v.x *= 3;
         v.z *= 3;
-        boolean d = isColliding();
         //System.out.println("FIRST: " + isColliding());
         this.pos.add(v);
 /*        if(isColliding()){
@@ -168,17 +165,18 @@ public class Player {
         }*/
         updateCam();
     }
-    public boolean isColliding(){ // checks if hit box is inside any blocks
-        float x = pos.x;
-        float y = pos.y;
-        float z = pos.z;
-        return Game.crenderer.getBlock(x - width / 2f, y - height, z - width / 2f) != null ||
-                Game.crenderer.getBlock(x - width / 2f, y, z - width / 2f) != null ||
+    public boolean isColliding(float x, float y, float z){ // checks if hit box is inside any blocks
+        return Game.crenderer.getBlock(x - width / 2f, y - height, z - width / 2f) != null || // bottom
                 Game.crenderer.getBlock(x + width / 2f, y - height, z - width / 2f) != null ||
-                Game.crenderer.getBlock(x + width / 2f, y, z - width / 2f) != null ||
                 Game.crenderer.getBlock(x - width / 2f, y - height, + width / 2f) != null ||
+                Game.crenderer.getBlock(x + width / 2f, y - height, z + width / 2f) != null ||// middle
+                Game.crenderer.getBlock(x - width / 2f, y - height / 2, z - width / 2f) != null ||
+                Game.crenderer.getBlock(x + width / 2f, y - height / 2, z - width / 2f) != null ||
+                Game.crenderer.getBlock(x - width / 2f, y - height / 2, + width / 2f) != null ||
+                Game.crenderer.getBlock(x + width / 2f, y - height / 2, z + width / 2f) != null ||
+                Game.crenderer.getBlock(x - width / 2f, y, z - width / 2f) != null || // top
+                Game.crenderer.getBlock(x + width / 2f, y, z - width / 2f) != null ||
                 Game.crenderer.getBlock(x - width / 2f, y, z + width / 2f) != null ||
-                Game.crenderer.getBlock(x + width / 2f, y - height, z + width / 2f) != null ||
                 Game.crenderer.getBlock(x + width / 2f, y, z + width / 2f) != null;
     }
     public void setPos(float x, float y, float z){
@@ -241,14 +239,11 @@ public class Player {
                             v.x = 0;
                         }
                         if (collision[1].y != 0f) {
-                            pos.x = collision[0].x - (width / 2f) * addx;
+                            this.vel.y = 0;
+                            v.y = 0;
                             if (pos.y != (collision[0].y + (height) * addy)) {
                                 pos.y = (float) (collision[0].y + 0.01 * collision[1].y + (height) * addy);
                             }
-                            pos.z = collision[0].z - (width / 2f) * addz;
-                            isOnGround = true;
-                            this.vel.y = 0;
-                            v.y = 0;
                         }
                         if (collision[1].z != 0f) {
                             this.vel.z = 0;

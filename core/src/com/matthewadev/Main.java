@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.ModelInstance;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.physics.bullet.Bullet;
 import com.badlogic.gdx.utils.ScreenUtils;
 import com.matthewadev.game.Game;
@@ -18,12 +19,17 @@ import com.matthewadev.render.BlockRenderer;
 public class Main extends ApplicationAdapter {
 	@Override
 	public void create () {
-		Bullet.init(true);
+
+		//Bullet.init(true);
 		Game.init();
+		Game.p = new GLProfiler(Gdx.graphics);
+		Game.p.enable();
 	}
 
 	@Override
 	public void render () {
+		System.out.println(Game.p.getDrawCalls());
+		Game.p.reset();
 		// clear
 		ScreenUtils.clear(0, 0, 0, 1);
 		// opengl things

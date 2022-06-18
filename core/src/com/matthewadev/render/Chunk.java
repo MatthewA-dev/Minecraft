@@ -3,11 +3,12 @@ package com.matthewadev.render;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.VertexAttributes;
 import com.badlogic.gdx.graphics.g3d.*;
+import com.badlogic.gdx.graphics.g3d.utils.MeshBuilder;
+import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.matthewadev.game.Game;
-import com.matthewadev.physics.PhysicsManager;
 
 import java.util.ArrayList;
 
@@ -18,7 +19,6 @@ public class Chunk {
     private ArrayList<Block> allBlocks = new ArrayList<>();
     private Model chunkModel;
     private ModelInstance instance;
-    private BoundingBox bounds = new BoundingBox();
 
     public Chunk(int x, int z) {
         this.x = x;
@@ -28,7 +28,10 @@ public class Chunk {
 
     // https://stackoverflow.com/q/38457356/14969155
     public void recalculateMesh() {
-        int attr = VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates;
+        if(chunkModel != null){
+            chunkModel.dispose();
+        }
+        int attr = VertexAttributes.Usage.Position | VertexAttributes.Usage.TextureCoordinates;
         ModelBuilder modelBuilder = new ModelBuilder();
         modelBuilder.begin();
         for (Block b : allBlocks) {
@@ -36,24 +39,25 @@ public class Chunk {
             int bchunkx = (int) chunkCoords.x;
             int bchunky = (int) chunkCoords.y;
             int bchunkz = (int) chunkCoords.z;
-            if (getBlock(b.getX(),b.getY() + 1,b.getZ()) == null) {
+            // render the face if block isn't present and if its transparent
+            if (getBlock(b.getX(),b.getY() + 1,b.getZ()) == null || BlockType.isTransparent(getBlock(b.getX(),b.getY() + 1,b.getZ()).getType())) {
                 modelBuilder.part("box", GL20.GL_TRIANGLES, attr, b.topMat)
                         .rect(0f + bchunkx, 1f + bchunky, 0f + bchunkz, 0f + bchunkx, 1f + bchunky, 1f + bchunkz, 1f + bchunkx, 1f + bchunky, 1f + bchunkz, 1f + bchunkx, 1f + bchunky, 0f + bchunkz, 0f, 1f, 0f);
-            } if (getBlock(b.getX(),b.getY(),b.getZ() - 1) == null){
+            } if (getBlock(b.getX(),b.getY(),b.getZ() - 1) == null || BlockType.isTransparent(getBlock(b.getX(),b.getY(),b.getZ() - 1).getType())){
                 modelBuilder.part("box", GL20.GL_TRIANGLES, attr, b.sideMat)
                         //.rect(0f + bchunkx, 0f + bchunky, 0f + bchunkz, 1f + bchunkx, 0f + bchunky, 0f + bchunkz, 1f + bchunkx, 1f + bchunky, 0f + bchunkz, 0f + bchunkx, 1f + bchunky, 0f + bchunkz, 0f, 0f, -1f);
                         .rect(1f + bchunkx, 0f + bchunky, 0f + bchunkz, 0f + bchunkx, 0f + bchunky, 0f + bchunkz, 0f + bchunkx, 1f + bchunky, 0f + bchunkz, 1f + bchunkx, 1f + bchunky, 0f + bchunkz, 0f, 0f, -1f);
-            } if (getBlock(b.getX(),b.getY(),b.getZ() + 1) == null){
+            } if (getBlock(b.getX(),b.getY(),b.getZ() + 1) == null || BlockType.isTransparent(getBlock(b.getX(),b.getY(),b.getZ() + 1).getType())){
                 modelBuilder.part("box", GL20.GL_TRIANGLES, attr, b.sideMat)
                         .rect(0f + bchunkx, 0f + bchunky, 1f + bchunkz, 1f + bchunkx, 0f + bchunky, 1f + bchunkz, 1f + bchunkx, 1f + bchunky, 1f + bchunkz, 0f + bchunkx, 1f + bchunky, 1f + bchunkz, 0f, 0f, -1f);
                 //.rect(0f, 0f, 1f,// 1f, 0f, 1f, ///0.5f, 1f, 1f,//// 0f, 1f, 1f,  0f, 0f, -1f);
-            } if (getBlock(b.getX() - 1,b.getY(),b.getZ()) == null) {
+            } if (getBlock(b.getX() - 1,b.getY(),b.getZ()) == null || BlockType.isTransparent(getBlock(b.getX() - 1,b.getY(),b.getZ()).getType())) {
                 modelBuilder.part("box", GL20.GL_TRIANGLES, attr, b.sideMat)
                         .rect(0f + bchunkx, 0f + bchunky, 0f + bchunkz, 0f + bchunkx, 0f + bchunky, 1f + bchunkz, 0f + bchunkx, 1f + bchunky, 1f + bchunkz, 0f + bchunkx, 1f + bchunky, 0f + bchunkz, -1f, 0f, 0f);
-            } if (getBlock(b.getX() + 1,b.getY(),b.getZ()) == null){
+            } if (getBlock(b.getX() + 1,b.getY(),b.getZ()) == null || BlockType.isTransparent(getBlock(b.getX() + 1,b.getY(),b.getZ()).getType())){
                 modelBuilder.part("box", GL20.GL_TRIANGLES, attr, b.sideMat)
                         .rect(1f + bchunkx, 0f + bchunky, 1f + bchunkz,1f + bchunkx, 0f + bchunky, 0f + bchunkz, 1f + bchunkx, 1f + bchunky, 0f + bchunkz, 1f + bchunkx, 1f + bchunky, 1f + bchunkz,  1f, 0f, 0f);
-            } if(getBlock(b.getX(),b.getY() - 1,b.getZ()) == null){
+            } if(getBlock(b.getX(),b.getY() - 1,b.getZ()) == null || BlockType.isTransparent(getBlock(b.getX(),b.getY() - 1,b.getZ()).getType())){
                 modelBuilder.part("box", GL20.GL_TRIANGLES, attr, b.botMat)
                         .rect(0f + bchunkx, 0f + bchunky, 1f + bchunkz, 0f + bchunkx, 0f + bchunky, 0f + bchunkz, 1f + bchunkx, 0f + bchunky, 0f + bchunkz, 1f + bchunkx, 0f + bchunky, 1f + bchunkz, 0f, -1f, 0f);
             }
@@ -61,9 +65,6 @@ public class Chunk {
         chunkModel = modelBuilder.end();
         instance = new ModelInstance(chunkModel);
         instance.transform.translate(new Vector3(this.x * 16f,0f, this.z * 16f));
-        chunkModel.calculateBoundingBox(bounds);
-
-        PhysicsManager.addChunkToWorld(chunkModel,instance.transform,x,z, allBlocks);
     }
     public void addBlockWithoutCalculation(Block block){
         if(block != null) {
@@ -147,7 +148,6 @@ public class Chunk {
         }
     }
     public void dispose(){
-        PhysicsManager.removeChunkFromWorld(x,z);
         chunkModel.dispose();
 /*        for(Block[][] blocks1 : blocks){
             for(Block[] blocks2 : blocks1){
@@ -160,16 +160,14 @@ public class Chunk {
         }*/
     }
     public void render(ModelBatch b, Environment env){
-        b.render(instance, env);
+        b.render(instance);
+        //b.render(instance, env);
     }
     public Model getModel(){
         return chunkModel;
     }
     public ModelInstance getInstance(){
         return instance;
-    }
-    public BoundingBox getBounds(){
-        return bounds;
     }
     public static int getChunkCoord(int c){
         if(c < 0){

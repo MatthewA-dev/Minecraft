@@ -3,6 +3,7 @@ package com.matthewadev.render;
 import com.badlogic.gdx.graphics.*;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.*;
+import com.badlogic.gdx.graphics.g3d.attributes.BlendingAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.attributes.TextureAttribute;
 import com.badlogic.gdx.graphics.g3d.decals.Decal;
@@ -50,6 +51,12 @@ public class Block {
             botMat = new Material(TextureAttribute.createDiffuse(textures.get(BlockSide.BOTTOM)));
         }else{
             botMat = new Material(TextureAttribute.createDiffuse(textures.get(BlockSide.TOP)));
+        }
+        // transparency
+        if(BlockType.isTransparent(blockType)) {
+            topMat.set(new BlendingAttribute(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA));
+            sideMat.set(new BlendingAttribute(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA));
+            botMat.set(new BlendingAttribute(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA));
         }
         //ModelBuilder modelBuilder = new ModelBuilder();
         // create the six instances

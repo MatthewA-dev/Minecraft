@@ -4,5 +4,6 @@ public enum Screen {
     GAME,
     PAUSED,
     MAIN_MENU,
-    CONTROL_MENU
+    CONTROL_MENU,
+    INVENTORY
 }
