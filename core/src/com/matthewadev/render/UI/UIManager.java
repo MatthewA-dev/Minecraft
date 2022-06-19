@@ -32,6 +32,7 @@ public class UIManager {
         UIElement playBtn = new Button(360, 400, 360, 75, new Color(0,0,0, 1f), new Runnable() {
             @Override
             public void run() {
+                Game.crenderer.loadWorld();
                 UIManager.currentScreen = Screen.GAME;
                 Gdx.input.setCursorCatched(true);
             }
@@ -65,6 +66,8 @@ public class UIManager {
         UIElement menu = new Button(360, 600, 360, 75, new Color(0,0,0, 1f), new Runnable() {
             @Override
             public void run() {
+                // do saving
+                Game.crenderer.saveWorld();
                 UIManager.currentScreen = Screen.MAIN_MENU;
             }
         });

@@ -15,12 +15,14 @@ import java.util.stream.Stream;
 
 public class TextureManager {
     public static HashMap<BlockType, HashMap<BlockSide,Texture>> textures = new HashMap<>();
+    public static Texture all;
     public static void loadTextures() {
         //System.setProperty("user.dir","..");
         // by default, load top texture
         for (BlockType t : BlockType.values()){
             textures.put(t, new HashMap<BlockSide, Texture>());
         }
+        all = new Texture(Gdx.files.internal("textures/textureMap.png"));
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(Paths.get("./textures"))) { // i am not proud of this
             for (Path file: stream) {
                 String[] fileName = file.getFileName().toString().split("-"); // remove the beginning component and try and see if there is a block type

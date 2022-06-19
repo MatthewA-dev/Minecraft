@@ -1,22 +1,30 @@
 package com.matthewadev.render;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.VertexAttribute;
 import com.badlogic.gdx.graphics.VertexAttributes;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.*;
 import com.badlogic.gdx.graphics.g3d.utils.MeshBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
+import com.badlogic.gdx.graphics.glutils.VertexBufferObject;
+import com.badlogic.gdx.maps.objects.TextureMapObject;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.math.collision.BoundingBox;
 import com.matthewadev.game.Game;
+import sun.security.provider.certpath.Vertex;
 
+import java.beans.VetoableChangeListener;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Chunk {
     public final int x;
     public final int z;
     //private Block[][][] blocks = new Block[128][16][16];
-    private ArrayList<Block> allBlocks = new ArrayList<>();
+    public ArrayList<Block> allBlocks = new ArrayList<>();
     private Model chunkModel;
     private ModelInstance instance;
 
@@ -31,7 +39,7 @@ public class Chunk {
         if(chunkModel != null){
             chunkModel.dispose();
         }
-        int attr = VertexAttributes.Usage.Position | VertexAttributes.Usage.TextureCoordinates;
+        int attr = VertexAttributes.Usage.Position | VertexAttributes.Usage.Normal | VertexAttributes.Usage.TextureCoordinates;
         ModelBuilder modelBuilder = new ModelBuilder();
         modelBuilder.begin();
         for (Block b : allBlocks) {
@@ -61,10 +69,11 @@ public class Chunk {
                 modelBuilder.part("box", GL20.GL_TRIANGLES, attr, b.botMat)
                         .rect(0f + bchunkx, 0f + bchunky, 1f + bchunkz, 0f + bchunkx, 0f + bchunky, 0f + bchunkz, 1f + bchunkx, 0f + bchunky, 0f + bchunkz, 1f + bchunkx, 0f + bchunky, 1f + bchunkz, 0f, -1f, 0f);
             }
-}
+        }
         chunkModel = modelBuilder.end();
         instance = new ModelInstance(chunkModel);
         instance.transform.translate(new Vector3(this.x * 16f,0f, this.z * 16f));
+
     }
     public void addBlockWithoutCalculation(Block block){
         if(block != null) {
@@ -160,8 +169,8 @@ public class Chunk {
         }*/
     }
     public void render(ModelBatch b, Environment env){
-        b.render(instance);
-        //b.render(instance, env);
+        //b.render(instance);
+        b.render(instance, env);
     }
     public Model getModel(){
         return chunkModel;

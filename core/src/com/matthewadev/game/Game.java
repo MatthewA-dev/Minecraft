@@ -22,7 +22,6 @@ public class Game {
     public static float timeSince = 0f; // time since last tick
     public static Block empty;
 
-    public static GLProfiler p;
     public static void init(){
         camera = new PerspectiveCamera(90, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         //camera.position.set(1f, 1f, 1f);
@@ -41,13 +40,13 @@ public class Game {
         empty = new Block(0,0,0, BlockType.EMPTY);
         Gdx.input.setInputProcessor(inputHandler);
         // lighting
-/*        env = new Environment();
+        env = new Environment();
         env.set(new ColorAttribute(ColorAttribute.AmbientLight, 0.4f, 0.4f, 0.4f, 1f));
-        env.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));*/
+        env.add(new DirectionalLight().set(0.8f, 0.8f, 0.8f, -1f, -0.8f, -0.2f));
+
         crenderer.handleChunkDistances();
     }
     public static void runFrame(){
-
         UIManager.render();
     }
     public static void runTick(){

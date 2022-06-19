@@ -5,8 +5,8 @@ import com.matthewadev.render.BlockType;
 import com.matthewadev.render.Chunk;
 
 public class WorldGenerator {
-    private static int level = 10;
-    private static int variance = 5;
+    private static int level = 0;
+    private static int variance = 1;
     public static Chunk generateChunk(int chunkx, int chunkz){
         Chunk c = new Chunk(chunkx, chunkz);
         for(int x = 0; x < 16; x++) {
