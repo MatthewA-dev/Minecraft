@@ -12,7 +12,7 @@ public class DesktopLauncher {
 		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
 		config.setForegroundFPS(60);
 		config.setWindowedMode(1080, 720);
-		config.setTitle("Minecraft but worse");
+		config.setTitle("Minecraft");
 		config.setResizable(false);
 		new Lwjgl3Application(new Main(), config);
 	}

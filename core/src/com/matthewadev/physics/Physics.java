@@ -158,13 +158,14 @@ public class Physics {
     }
     public static void destroyBlockWhereLooking(){
         try {
-            Vector3 block = calcCols(Game.camera.position, Game.camera.direction, 3.5f, true, true, 10)[0];
+            Vector3 block = calcCols(Game.camera.position, Game.camera.direction, 5.5f, true, true, 10)[0];
             Game.crenderer.removeBlock((int) block.x, (int) block.y, (int) block.z);
-        }catch(NullPointerException ignored){}
+        }catch(NullPointerException ignored){
+        }
     }
     public static void addBlockWhereLooking(BlockType type){
         try {
-            Vector3[] block = calcCols(Game.camera.position, Game.camera.direction, 3.5f, true, true, 10);
+            Vector3[] block = calcCols(Game.camera.position, Game.camera.direction, 5.5f, true, true, 10);
             Block b = new Block((int) (block[0].x + block[1].x), (int) (block[0].y + block[1].y), (int) (block[0].z + block[1].z), type);
             //System.out.println(b.getX() + " " + b.getY() + " " + b.getZ());
             // check if your inside block
