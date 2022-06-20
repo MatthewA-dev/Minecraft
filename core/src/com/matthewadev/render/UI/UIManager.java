@@ -8,9 +8,11 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.matthewadev.game.Game;
-import com.matthewadev.render.*;
+import com.matthewadev.render.BlockSide;
+import com.matthewadev.render.BlockType;
+import com.matthewadev.render.Renderer2D;
+import com.matthewadev.render.TextureManager;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class UIManager {

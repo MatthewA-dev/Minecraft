@@ -1,15 +1,6 @@
 package com.matthewadev.render;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.PerspectiveCamera;
-import com.badlogic.gdx.graphics.g3d.*;
-import com.badlogic.gdx.graphics.g3d.decals.DecalBatch;
-import com.badlogic.gdx.graphics.g3d.utils.RenderableSorter;
-import com.badlogic.gdx.utils.Array;
-import com.matthewadev.game.Game;
-
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public class BlockRenderer {
     private ArrayList<Block> blocks = new ArrayList<>();

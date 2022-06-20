@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
 import com.badlogic.gdx.graphics.g3d.attributes.ColorAttribute;
 import com.badlogic.gdx.graphics.g3d.environment.DirectionalLight;
-import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.matthewadev.input.InputHandler;
 import com.matthewadev.render.*;
 import com.matthewadev.render.UI.UIManager;

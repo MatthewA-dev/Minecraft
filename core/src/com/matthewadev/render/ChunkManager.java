@@ -2,7 +2,6 @@ package com.matthewadev.render;
 
 import com.badlogic.gdx.graphics.g3d.Environment;
 import com.badlogic.gdx.graphics.g3d.ModelBatch;
-import com.matthewadev.Main;
 import com.matthewadev.game.Game;
 import com.matthewadev.game.WorldGenerator;
 import com.matthewadev.physics.Physics;

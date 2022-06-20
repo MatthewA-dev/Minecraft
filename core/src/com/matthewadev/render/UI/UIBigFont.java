@@ -5,8 +5,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.matthewadev.game.Game;
-import com.matthewadev.render.Renderer2D;
 
 public class UIBigFont extends UIElement{
     public UIBigFont(int x0, int y0, int width, int height, Color c) {

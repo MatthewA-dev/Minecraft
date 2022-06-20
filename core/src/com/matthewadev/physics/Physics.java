@@ -3,7 +3,6 @@ package com.matthewadev.physics;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector3;
 import com.matthewadev.game.Game;
-import com.matthewadev.game.Player;
 import com.matthewadev.render.Block;
 import com.matthewadev.render.BlockType;
 

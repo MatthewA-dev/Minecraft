@@ -7,7 +7,6 @@ import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.math.Vector3;
 import com.matthewadev.game.Game;
 import com.matthewadev.physics.Physics;
-import com.matthewadev.render.BlockType;
 import com.matthewadev.render.UI.*;
 
 // Continuous input handler (e.g. moving the player)
@@ -91,7 +90,7 @@ public class InputHandler implements InputProcessor {
         if(UIManager.currentScreen == Screen.GAME) {
             switch (keycode) {
                 case Input.Keys.R:
-                    Game.player.setPos(0f, 2.8f, 0.5f);
+                    Game.player.setPos(1f, 50f, 1f);
                     break;
                 case Input.Keys.H:
                     Game.player.isFlying = !Game.player.isFlying;
@@ -101,7 +100,7 @@ public class InputHandler implements InputProcessor {
                         Game.player.addVel(0f, 5f, 0f);
                     }
                     break;
-                case Input.Keys.Y:
+                /*case Input.Keys.Y:
                     Game.camera.direction.set(1f, 0f, 0f);
                     break;
                 case Input.Keys.U:
@@ -115,7 +114,7 @@ public class InputHandler implements InputProcessor {
                     break;
                 case Input.Keys.P:
                     Game.camera.direction.set(.5f, 0f, .5f);
-                    break;
+                    break;*/
                 case Input.Keys.ESCAPE:
                     UIManager.currentScreen = Screen.PAUSED;
                     Gdx.input.setCursorCatched(false);
