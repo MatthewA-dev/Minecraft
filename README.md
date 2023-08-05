@@ -1,5 +1,5 @@
 # Minecraft
-It's minecraft, I think.
+It's minecraft
 
 # Setup
 Due to some limitations to how I wanted to do textures, you must include the textures folder in the same root as the compiled jar. 
